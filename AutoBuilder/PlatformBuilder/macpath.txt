@@ -1,0 +1,2 @@
+BUILDPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\mac\MAC.app
+LOGPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\mac\MAC.log

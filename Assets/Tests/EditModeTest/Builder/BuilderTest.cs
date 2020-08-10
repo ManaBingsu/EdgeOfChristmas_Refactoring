@@ -4,21 +4,22 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Editor.Builder;
+using UnityEditor;
 
 namespace Tests
 {
     public class BuilderTest
     {
-        Builder builder;
+        AutoBuilder builder;
         [Test]
-        public void CommandLine_ParsingBuildInformationFromString()
+        public void ParsingBuildInformationFromString()
         {
             string[] strings = new string[] {
                 "$Valid1",
-                "Error1",
+                "Invalid1",
                 "$Valid2",
                 "$Valid3",
-                "Error2",
+                "Invalid2",
                 "$Valid4"
             };
             List<string> validStrings = builder.GetValidStrings(strings, "$");
@@ -26,15 +27,51 @@ namespace Tests
         }
 
         [Test]
-        public void GetValidBuildInfo()
+        public void BuildFailedWhenArgumentNumberIsInvalid()
         {
+            string[] strings = new string[] {
+                "$buildPath",
+                "$logPath",
+                "$win64",
+                "$LZ4",
+                "$Over1"
+            };
+            builder = new AutoBuilder(strings);
+            Assert.IsFalse(builder.BuildGame());
+            strings = new string[] {
+                "$buildPath",
+                "$logPath",
+                "$win64",
+            };
+            builder = new AutoBuilder(strings);
+            Assert.IsFalse(builder.BuildGame());
+        }
 
+        [Test]
+        public void BuildFailedWhenPlatformOrCompressionModeIsInvalid()
+        {
+            string[] strings = new string[] {
+                "$buildPath",
+                "$logPath",
+                "$Invalid1",
+                "$LZ4"
+            };
+            builder = new AutoBuilder(strings);
+            Assert.IsFalse(builder.BuildGame());
+            strings = new string[] {
+                "$buildPath",
+                "$logPath",
+                "$win64",
+                "$Invalid1"
+            };
+            builder = new AutoBuilder(strings);
+            Assert.IsFalse(builder.BuildGame());
         }
 
         [SetUp]
         public void SetUp()
         {
-            builder = new Builder();
+            builder = new AutoBuilder();
         }
     }
 }
