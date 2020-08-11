@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Editor.Builder;
 using UnityEditor;
 
 namespace Tests
 {
     public class BuilderTest
     {
-        AutoBuilder builder;
+        /*AutoBuilder builder;
         [Test]
         public void ParsingBuildInformationFromString()
         {
@@ -72,6 +71,6 @@ namespace Tests
         public void SetUp()
         {
             builder = new AutoBuilder();
-        }
+        }*/
     }
 }

@@ -1,2 +1,0 @@
-BUILDPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\linux\WIN64
-LOGPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\linux\WIN64.log

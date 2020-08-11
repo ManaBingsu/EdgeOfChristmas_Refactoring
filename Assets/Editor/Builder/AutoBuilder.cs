@@ -1,18 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using System.Diagnostics;
 using UnityEngine;
 using System;
 using System.Text;
 using UnityEditor.Build.Reporting;
-using System.IO.Compression;
 using Debug = UnityEngine.Debug;
 
-namespace Editor.Builder
+namespace Builder
 {
-    [CreateAssetMenu]
-    public class AutoBuilder
+    public static class AutoBuilder
     {
         enum BuildArg
         {
@@ -24,7 +20,7 @@ namespace Editor.Builder
         }
 
         [SerializeField]
-        Dictionary<string, BuildTarget> platforms = new Dictionary<string, BuildTarget>()
+        static Dictionary<string, BuildTarget> platforms = new Dictionary<string, BuildTarget>()
         {
             { "win64", BuildTarget.StandaloneWindows64 },
             { "win32", BuildTarget.StandaloneWindows },
@@ -34,31 +30,23 @@ namespace Editor.Builder
         };
 
         [SerializeField]
-        Dictionary<string, BuildOptions> compressions = new Dictionary<string, BuildOptions>()
+        static Dictionary<string, BuildOptions> compressions = new Dictionary<string, BuildOptions>()
         {
             { "Default", BuildOptions.None },
             { "LZ4", BuildOptions.CompressWithLz4 },
             { "LZ4HC", BuildOptions.CompressWithLz4HC },
         };
 
-        private string[] testArgs;
+        public static string[] testArgs;
 
-        public AutoBuilder()
-        {
-
-        }
-
-        public AutoBuilder(string[] args)
-        {
-            testArgs = args;
-        }
-
-        public bool BuildGame()
+        [MenuItem("Builder/Build")]
+        public static bool BuildGame()
         {
 #if UNITY_EDITOR
             // Parsing arguments
             string[] cmdArgs = testArgs == null ? System.Environment.GetCommandLineArgs() : testArgs;
             List<string> args = GetValidStrings(cmdArgs, "$");
+
             if (args.Count != (int)BuildArg.END)
             {
                 Debug.Log("Build failed: Argument number exception");
@@ -79,8 +67,7 @@ namespace Editor.Builder
             }
 #endif
         }
-
-        public bool BuildWithBuildInfo(List<string> args, BuildTarget platform, BuildOptions compressionMode)
+        public static bool BuildWithBuildInfo(List<string> args, BuildTarget platform, BuildOptions compressionMode)
         {
             BuildReport report = BuildPipeline.BuildPlayer(
                 GetBuildingScene(),
@@ -92,7 +79,7 @@ namespace Editor.Builder
             return summary.result == BuildResult.Succeeded ? MakeLog(true, args, summary.totalTime.ToString()) : MakeLog(false, args, "");
         }
 
-        public bool MakeLog(bool isSuceeded, List<string> args, string msg)
+        public static bool MakeLog(bool isSuceeded, List<string> args, string msg)
         {
             StringBuilder sb = new StringBuilder();
             if (isSuceeded)
@@ -110,7 +97,7 @@ namespace Editor.Builder
             return isSuceeded;
         }
 
-        public List<string> GetValidStrings(string[] targets, string separator)
+        public static List<string> GetValidStrings(string[] targets, string separator)
         {
             List<string> strings = new List<string>();
             foreach (string target in targets)
@@ -125,7 +112,7 @@ namespace Editor.Builder
             return strings;
         }
 
-        public string[] GetBuildingScene()
+        public static string[] GetBuildingScene()
         {
             int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
             string[] scenes = new string[sceneCount];
@@ -135,41 +122,5 @@ namespace Editor.Builder
             }
             return scenes;
         }
-
-        [Serializable]
-        class PlatformInfo
-        {
-            [SerializeField]
-            string name;
-            public string Name => name;
-            [SerializeField]
-            BuildTarget platform;
-            public BuildTarget Platform => platform;
-
-            public PlatformInfo(string name, BuildTarget platform)
-            {
-                this.name = name;
-                this.platform = platform;
-            }
-        }
-
-        [Serializable]
-        class CompressionInfo
-        {
-            [SerializeField]
-            string name;
-            public string Name => name;
-            [SerializeField]
-            BuildOptions mode;
-            public BuildOptions Mode => mode;
-
-            public CompressionInfo(string name, BuildOptions mode)
-            {
-                this.name = name;
-                this.mode = mode;
-            }
-        }
     }
 }
-
-

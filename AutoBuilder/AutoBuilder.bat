@@ -40,7 +40,7 @@ for /f "tokens=1,2 delims=$$" %%a in (%PLATFORMCONFIG%) do (
 	)
 	if "%%a"=="PLATFORM" (
 		set PLATFORM=%%b
-		call "./PlatformBuilder/PlatformBuilder.bat"
+		call "./PathConfig/PlatformBuilder.bat"
 	)
 )
 pause

@@ -4,7 +4,7 @@ echo COMPRESSION	: !COMPRESSION!
 echo.
 echo Begin	: %time%
 echo Building...
-set CONFIG=./PlatformBuilder/!PLATFORM!path.txt
+set CONFIG=./PathConfig/!PLATFORM!path.txt
 for /f "tokens=1,2 delims=$$" %%a in (%CONFIG%) do (
 	if "%%a"=="BUILDPATH" (
 		set BUILDPATH=%%b
@@ -13,8 +13,8 @@ for /f "tokens=1,2 delims=$$" %%a in (%CONFIG%) do (
 		set LOGPATH=%%b
 	)
 )
-echo "%PROJECTPATH%" 
-"%EDITORPATH%" -quit -batchmode -projectPath "%PROJECTPATH%" -executeMethod AutoBuilder.BuildGame "$%BUILDPATH%" "$%LOGPATH%" "$!PLATFORM!" "$!COMPRESSION!"  
+"%EDITORPATH%" -quit -batchmode -projectPath "%PROJECTPATH%" -executeMethod Builder.AutoBuilder.BuildGame "$%BUILDPATH%" "$%LOGPATH%" "$!PLATFORM!" "$!COMPRESSION!"  
 echo Finish building!
+echo BuildPath	: %BUILDPATH%
 echo End	: %time%
 echo.

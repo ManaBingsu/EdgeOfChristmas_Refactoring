@@ -1,2 +1,0 @@
-BUILDPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\win32\WIN32.exe
-LOGPATH$$C:\Users\SouthPAW Games\Desktop\hyunseok\Project\AutoBuilder\Build\win32\WIN32.log
