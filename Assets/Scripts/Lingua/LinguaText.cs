@@ -7,22 +7,28 @@ namespace Lingua
 {
     public class LinguaText : MonoBehaviour
     {
-        private TextMeshPro textObject;
-        string[] strings;
+        private TextMeshProUGUI textObject;
+        [SerializeField]
+        private string key;
 
         private void Awake()
         {
-            textObject = GetComponent<TextMeshPro>();
+            textObject = GetComponent<TextMeshProUGUI>();
+        }
+
+        private void Start()
+        {
+            UpdateText();
         }
 
         private void OnEnable()
         {
-
+            UpdateText();
         }
 
         void UpdateText()
         {
-
+            textObject.text = Lingua.GetString(key);
         }
     }
 }

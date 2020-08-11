@@ -23,15 +23,15 @@ MonoBehaviour:
     lastFileHash: 
     label: 
     assetReference: {fileID: 0}
-  - m_ID: 13
+  - m_ID: 14
     m_Name: Strings
     m_Depth: 0
     enabled: 1
     fileType: 1
     url: https://docs.google.com/spreadsheets/export?format=csv&id=1hlWi3AX_ezlTv7YnV2NKR7oPfs3P1KB_W6LYEKL_mow
-    filePath: Assets/Scripts/Lingua/strings.csv
-    lastFileHash: c697b0ef25121b40f6a4f16172d05551
+    filePath: Assets/Resources/strings.csv
+    lastFileHash: d24fff581d4ebcbdc86abffc83a44445
     label: 
-    assetReference: {fileID: 4900000, guid: 17cc4288aad1bb04d9db400a266811bd, type: 3}
+    assetReference: {fileID: 4900000, guid: de0dc0c57e768a349954ea5af29b84eb, type: 3}
   autoRefresh: 0
   refreshInterval: 120

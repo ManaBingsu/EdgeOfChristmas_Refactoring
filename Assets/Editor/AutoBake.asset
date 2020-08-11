@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 931ac728d32d22546ae23a27937d2a73, type: 3}
-  m_Name: New Auto Bake
+  m_Name: AutoBake
   m_EditorClassIdentifier: 
-  stringPath: Assets/strings.csv
+  stringPath: Assets/Resources/strings.csv
   locations:
   - name: KOREAN
     index: 1
-    fontAssets: []
+    fontAssets:
+    - {fileID: 11400000, guid: 2e50eb65bbb82f44787bdac6e0463531, type: 2}
   - name: ENGLISH
     index: 2
     fontAssets: []
