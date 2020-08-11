@@ -5,8 +5,9 @@ using System;
 using System.Text;
 using UnityEditor.Build.Reporting;
 using Debug = UnityEngine.Debug;
+using System.Linq;
 
-namespace Builder
+namespace AutoBuilder
 {
     public static class AutoBuilder
     {
@@ -39,8 +40,7 @@ namespace Builder
 
         public static string[] testArgs;
 
-        [MenuItem("Builder/Build")]
-        public static bool BuildGame()
+        public static bool BuildGameWithCommandLine()
         {
 #if UNITY_EDITOR
             // Parsing arguments
@@ -77,6 +77,35 @@ namespace Builder
             );
             BuildSummary summary = report.summary;
             return summary.result == BuildResult.Succeeded ? MakeLog(true, args, summary.totalTime.ToString()) : MakeLog(false, args, "");
+        }
+
+        [MenuItem("Builder/BuildWithWindow64")]
+        public static void BuildGame()
+        {
+            // Gather values from args
+            var options = ArgumentsParser.GetValidatedOptions();
+
+            // Gather values from project
+            var scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
+
+            // Define BuildPlayer Options
+            var buildOptions = new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = options["customBuildPath"],
+                target = (BuildTarget)Enum.Parse(typeof(BuildTarget), options["buildTarget"]),
+            };
+
+            // Perform build
+            BuildReport buildReport = BuildPipeline.BuildPlayer(buildOptions);
+
+            // Summary
+            BuildSummary summary = buildReport.summary;
+            StdOutReporter.ReportSummary(summary);
+
+            // Result
+            BuildResult result = summary.result;
+            StdOutReporter.ExitWithResult(result);
         }
 
         public static bool MakeLog(bool isSuceeded, List<string> args, string msg)

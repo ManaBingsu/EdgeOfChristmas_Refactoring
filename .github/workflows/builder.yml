@@ -29,6 +29,7 @@ jobs:
         with:
           unityVersion: 2019.4.6f1
           targetPlatform: StandaloneWindows64
+	  buildMethod: AutoBuilder.Builder.BuildGame
 
       # Output
       - uses: actions/upload-artifact@v1
