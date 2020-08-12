@@ -1,4 +1,4 @@
-﻿name: Actions 😎
+﻿name: Test runner
 
 on:
   push: { branches: [develop] }
