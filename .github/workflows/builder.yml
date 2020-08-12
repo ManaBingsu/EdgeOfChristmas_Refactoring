@@ -1,0 +1,60 @@
+﻿name: Actions 😎
+
+on:
+  push: { branches: [develop] }
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  build:
+    name: Build my project
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - path/to/your/project
+        unityVersion:
+          - 2019.4.6f1
+        testMode:
+          - playmode
+          - editmode
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v1.1.0
+        with:
+          path: Library
+          key: Library
+      # Test
+      - uses: webbertakken/unity-test-runner@v1.4
+        id: tests
+        with:
+          # projectPath: ${{ matrix.projectPath }}
+          unityVersion: ${{ matrix.unityVersion }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
+      # Test result
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Test results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+      # Build
+      - name: Build project
+        uses: webbertakken/unity-builder@v0.10
+        with:
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: StandaloneWindows64
+          buildMethod: AutoBuilder.Builder.BuildGame
+
+      # Output
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Build
+          path: build
