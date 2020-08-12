@@ -13,8 +13,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        projectPath:
-          - path/to/your/project
         unityVersion:
           - 2019.4.6f1
         testMode:
@@ -45,16 +43,3 @@ jobs:
         with:
           name: Test results for ${{ matrix.testMode }}
           path: ${{ steps.tests.outputs.artifactsPath }}
-      # Build
-      - name: Build project
-        uses: webbertakken/unity-builder@v0.10
-        with:
-          unityVersion: ${{ matrix.unityVersion }}
-          targetPlatform: StandaloneWindows64
-          buildMethod: AutoBuilder.Builder.BuildGame
-
-      # Output
-      - uses: actions/upload-artifact@v1
-        with:
-          name: Build
-          path: build
