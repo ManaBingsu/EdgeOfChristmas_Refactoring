@@ -1,4 +1,4 @@
-﻿name: Actions 😎
+﻿name: Builder
 
 on:
   push: { branches: [develop] }
