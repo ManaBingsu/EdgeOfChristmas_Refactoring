@@ -10,13 +10,8 @@ namespace AutoBuilder
 {
     public class Builder : MonoBehaviour
     {
-        [MenuItem("Build/Build")]
         public static void BuildGame()
-        {
-            // Update Resource
-            Resource resource = (Resource)AssetDatabase.LoadAssetAtPath("Assets/Scripts/Resource.asset", typeof(Resource));
-            resource.Load();
-            
+        {            
             // Gather values from args
             var options = ArgumentsParser.GetValidatedOptions();
 
