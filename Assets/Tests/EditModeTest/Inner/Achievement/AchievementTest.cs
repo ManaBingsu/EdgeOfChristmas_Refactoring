@@ -6,12 +6,12 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class AchivementTest
+    public class AchievementTest
     {
         [Test]
         public void GetAchivementWhenPassed()
         {
-            IAchivement achivement = new CountAchivement();
+            //IAchieve achivement = new CountAchievement();
 
         }
     }
