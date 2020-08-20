@@ -49,7 +49,7 @@ namespace Battle.Management
             StateEvents = new Action[(int)EFlowState.COUNT];
             for (int i = 0; i < StateEvents.Length; i++)
             {
-                StateEvents[i] = new Action(() => { });
+                StateEvents[i] = new Action(delegate { });
             }
         }
     }
