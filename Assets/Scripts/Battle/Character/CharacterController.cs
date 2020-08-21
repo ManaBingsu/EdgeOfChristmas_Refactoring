@@ -4,18 +4,20 @@ using UnityEngine;
 
 namespace Battle.Character
 {
-    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(CharacterAction))]
+    [RequireComponent(typeof(CharacterStat))]
     public class CharacterController : MonoBehaviour
     {
-        [SerializeField]
-        private CharacterData characterData;
+        private CharacterAction characterAction;
 
-        CharacterAction characterAction;
-        CharacterStat characterStat;
         private void Awake()
         {
-            characterStat = new CharacterStat(characterData);
-            characterAction = new CharacterAction(this);
+            characterAction = GetComponent<CharacterAction>();
+        }
+
+        public void Move(CharacterAction.EMoveState moveState)
+        {
+            characterAction.SetMoveState(moveState);
         }
     }
 }

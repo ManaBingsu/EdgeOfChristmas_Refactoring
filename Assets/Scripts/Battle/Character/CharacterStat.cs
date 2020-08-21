@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Battle.Character
 {
-    public class CharacterStat
+    public class CharacterStat : MonoBehaviour
     {
+        [SerializeField]
+        private CharacterData data;
         #region Stat
         public float MoveSpeed
         {
@@ -14,11 +16,9 @@ namespace Battle.Character
         }
         #endregion
 
-        CharacterController controller;
-
-        public CharacterStat(CharacterData characterStat)
+        void Awake()
         {
-            MoveSpeed = characterStat.moveSpeed;
+            MoveSpeed = data.moveSpeed;
         }
     }
 }

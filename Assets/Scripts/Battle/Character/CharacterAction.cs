@@ -1,49 +1,56 @@
-﻿using System.Collections;
+﻿using Battle.Character.Movement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Battle.Character
 {
-    public class CharacterAction
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class CharacterAction : MonoBehaviour
     {
-        public enum EDirection
+        public enum EMoveState
         {
             Left = -1,
             Zero = 0,
             Right = 1
         }
-        private EDirection direction;
-        public EDirection Direction
+        private EMoveState moveState;
+        public EMoveState MoveState
         {
-            get => direction;
+            get => moveState;
             set
             {
-                if (value == direction)
+                if (value == moveState)
                     return;
-                direction = value;
+                moveState = value;
             }
         }
 
-        CharacterController controller;
-
         ICharacterMove movement;
-        public CharacterStat Stat { get; private set; }
         public Rigidbody2D Body { get; private set; }
+        public CharacterStat Stat { get; private set; }
 
-        public CharacterAction(CharacterController controller)
+        private void Awake()
         {
-            this.controller = controller;
+            Body = GetComponent<Rigidbody2D>();
+            Stat = GetComponent<CharacterStat>();
+            movement = GetComponent<DefaultMovement>();
         }
 
-        public void Move(EDirection direction)
+        private void FixedUpdate()
         {
-            Direction = direction;
+            Move();
+        }
+
+        void Move()
+        {
             movement.Move(this);
         }
 
-        public void StopMove()
+        public void SetMoveState(EMoveState moveState)
         {
-            Direction = EDirection.Zero;
+            MoveState = moveState;
         }
     }
 }

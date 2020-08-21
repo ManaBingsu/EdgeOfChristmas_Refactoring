@@ -13,11 +13,7 @@ namespace Tests
         [Test]
         public void SetDefaultMoveSpeedUsingStatData()
         {
-            CharacterData characterData = ScriptableObject.CreateInstance<CharacterData>();
-            float testMoveSpeed = 10f;
-            characterData.moveSpeed = testMoveSpeed;
-            CharacterStat characterStat = new CharacterStat(characterData);
-            Assert.AreEqual(testMoveSpeed, characterStat.MoveSpeed);
+
         }
     }
 }

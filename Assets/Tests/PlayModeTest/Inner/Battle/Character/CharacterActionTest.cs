@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Battle.Character;
 using CharacterController = Battle.Character.CharacterController;
+using Debug = Helper.Debug;
+using UnityEngine.PlayerLoop;
 
 namespace Tests
 {
@@ -14,26 +16,52 @@ namespace Tests
 
         [UnityTest]
         public IEnumerator GoRight()
-        {/*
-            CharacterData characterData = ScriptableObject.CreateInstance<CharacterData>();
-            float testMoveSpeed = 10f;
-            characterData.moveSpeed = testMoveSpeed;
-            CharacterStat characterStat = new CharacterStat(characterData);
-
-            controller = Instantiate() as CharacterController;
-
-            CharacterAction characterAction = new CharacterAction(characterStat);
-            characterAction.Move(CharacterAction.EDirection.Right);
-            Assert.IsTrue(characterAction.body.velocity.x > )*/
-
-
+        {
+            GameObject obj = Instantiate(Resources.Load("Test/CharacterDefault")) as GameObject;
+            controller = obj.GetComponent<CharacterController>();
+            float time = 0f;
+            while (time < 1f)
+            {
+                controller.Move(CharacterAction.EMoveState.Right);
+                time += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            Assert.IsTrue(controller.transform.position.x > 0);
+            DestroyImmediate(controller.gameObject);
             yield return null;
         }
         [UnityTest]
-        public IEnumerator StopWhenInputStop()
+        public IEnumerator GoLeft()
         {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
+            GameObject obj = Instantiate(Resources.Load("Test/CharacterDefault")) as GameObject;
+            controller = obj.GetComponent<CharacterController>();
+            float time = 0f;
+            while (time < 1f)
+            {
+                controller.Move(CharacterAction.EMoveState.Left);
+                time += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            Assert.IsTrue(controller.transform.position.x < 0);
+            DestroyImmediate(controller.gameObject);
+            yield return null;
+        }
+
+
+        [UnityTest]
+        public IEnumerator Stop()
+        {
+            GameObject obj = Instantiate(Resources.Load("Test/CharacterDefault")) as GameObject;
+            controller = obj.GetComponent<CharacterController>();
+            float time = 0f;
+            while (time < 1f)
+            {
+                controller.Move(CharacterAction.EMoveState.Zero);
+                time += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            Assert.AreEqual(0, controller.transform.position.x);
+            DestroyImmediate(controller.gameObject);
             yield return null;
         }
     }
