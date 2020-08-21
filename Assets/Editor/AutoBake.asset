@@ -20,7 +20,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 2e50eb65bbb82f44787bdac6e0463531, type: 2}
   - name: ENGLISH
     index: 2
-    fontAssets: []
+    fontAssets:
+    - {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   - name: JAPANESE
     index: 3
     fontAssets: []

@@ -27,7 +27,7 @@ public class BackEndServerManager : MonoBehaviour
     public bool isLogin { get; private set; }   // 로그인 여부
 
     private bool isSuccess = false;                     // 로그인 성공 여부 (true이면 로그인 성공한 것)
-    private bool isUpdateNickName = false;              // 닉네임을 설정해야 되는지 여부(true이면 닉네임 설정해야됨)
+    private bool isUpdateNickName = true;              // 닉네임을 설정해야 되는지 여부(true이면 닉네임 설정해야됨)
     private string tempNickName;                        // 설정할 닉네임 (id와 동일)
     public string myNickName { get; private set; } = string.Empty;  // 로그인한 계정의 닉네임
     public string myIndate { get; private set; } = string.Empty;    // 로그인한 계정의 inDate
