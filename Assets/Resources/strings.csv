@@ -4,6 +4,24 @@ label/title,엣지 오브 크리스마스,Edge of Christmas
 label/pressanykey,아무키나눌러보숑,Press any key to start
 label/server/backend/register/nullfield,정보를 입력해주세요,Please enter the information
 label/server/backend/register/specialcharacter,특수문자는 사용하실 수 없습니다,Special characters cannot be used
-label/server/backend/register/leastcharacter,최소 6자리 이상 입력해주세요.,Please enter at least 6 digits.
+label/server/backend/register/leastcharacter,최소 6자리 이상 입력해주세요.,Please enter at least 6 digits
+label/server/backend/register/trytoregist,회원가입 진행 중,Try to regist user account
+label/server/backend/register/trytoregistnickname,닉네임 생성 중,Try to regist user nickname
+label/server/backend/register/enterid,ID를 입력해주세요,Enter ID
+label/server/backend/register/enterpassword,비밀번호를 입력해주세요,Enter password
+label/server/backend/registe/enternickname,닉네임을 입력해주세요,Enter nickname
+label/server/backend/register/register,회원가입,Register
+label/server/backend/register/createnickname,닉네임 생성,Create nickname
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
 #Test,,
 test/string1,시험용 문구,For testing

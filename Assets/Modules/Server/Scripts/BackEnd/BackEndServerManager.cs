@@ -211,8 +211,6 @@ public class BackEndServerManager : MonoBehaviour
             {
                 Debug.Log("커스텀 회원가입 성공");
                 tokenInfo = callback;
-                isSuccess = true;
-                isUpdateNickName = false;
                 loginSuccessFunc = func;
                 return;
             }
@@ -222,6 +220,26 @@ public class BackEndServerManager : MonoBehaviour
                 callback.GetStatusCode(), callback.GetErrorCode(), callback.GetMessage()));
         });
     }
+
+    // 닉네임 설정
+    public void RegistNickname(string nickname, Action<bool, string> func)
+    {
+        BackendAsyncClass.BackendAsync(Backend.BMember.CreateNickname, nickname, callback =>
+        {
+            if (callback.IsSuccess())
+            {
+                Debug.Log("닉네임 생성 성공");
+                isSuccess = true;
+                isUpdateNickName = false;
+                return;
+            }
+
+            Debug.LogError("닉네임 생성 실패\n" + callback.ToString());
+            func(false, string.Format(BackendError,
+                callback.GetStatusCode(), callback.GetErrorCode(), callback.GetMessage()));
+        });
+    }
+
     /*
     // 구글 페더레이션 로그인/회원가입
     public void GoogleAuthorizeFederation(Action<bool, string> func)
