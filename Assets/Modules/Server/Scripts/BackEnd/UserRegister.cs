@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.Mail;
 using UnityEngine;
 using UnityEngine.UI;
 using Lingua;
 using TMPro;
-using System.Text.RegularExpressions;
-using UnityEditor;
+using GameSystem;
 
 namespace Server.BackEnd
 {
@@ -33,8 +30,6 @@ namespace Server.BackEnd
         {
             Initialize();
         }
-
-
 
         void Initialize()
         {
@@ -76,7 +71,9 @@ namespace Server.BackEnd
             // Check validation
 
             // Try to register
-            BackEndServerManager.GetInstance().CustomSignIn(inputBlocks[(int)RegisterField.ID].field.text, inputBlocks[(int)RegisterField.PW].field.text, CustomSignInCallBack);
+            BackEndServerManager.GetInstance().CustomSignIn(inputBlocks[(int)RegisterField.ID].field.text, inputBlocks[(int)RegisterField.PW].field.text, SubmitCallBack);
+            // On loading panel
+            LoadingMessage.Instance.SetActivePanel(true);
         }
 
         void IDFieldCallback()
@@ -104,9 +101,17 @@ namespace Server.BackEnd
             }
         }
 
-        void CustomSignInCallBack(bool isSucceed, string msg)
+        void SubmitCallBack(bool isSucceed, string msg)
         {
-
+            if (isSucceed)
+            {
+                LoadingMessage.Instance.SetActivePanel(false);
+            }
+            else
+            {
+                AlertMessage.Instance.SetActivePanel(true);
+                AlertMessage.Instance.SetMessage(msg);
+            }
         }
 
         [Serializable]

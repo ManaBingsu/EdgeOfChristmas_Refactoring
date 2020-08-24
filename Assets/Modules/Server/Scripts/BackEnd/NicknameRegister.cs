@@ -34,6 +34,20 @@ namespace Server.BackEnd
             nicknameField.onEndEdit.AddListener(delegate { onEditNickname(); });
         }
 
+
+        public void OnClickSubmit()
+        {
+            // Check validation
+
+            // Try to register
+            BackEndServerManager.GetInstance().RegistNickname(nicknameField.text, SubmitCallBack);
+        }
+
+        void SubmitCallBack(bool isSucceed, string msg)
+        {
+
+        }
+
         public bool IsFieldEmpty()
         {
             if (nicknameField.text.Equals(""))

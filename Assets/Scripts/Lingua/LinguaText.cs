@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Lingua
 {
     public class LinguaText : MonoBehaviour
     {
-        private TextMeshProUGUI textObject;
+        private TextMeshProUGUI textMeshProObject;
+        private Text textObject;
         [SerializeField]
         private string key;
 
         private void Awake()
         {
-            textObject = GetComponent<TextMeshProUGUI>();
+            textMeshProObject = GetComponent<TextMeshProUGUI>();
+            if (textMeshProObject == null)
+                textObject = GetComponent<Text>();
         }
 
         private void Start()
@@ -28,7 +32,10 @@ namespace Lingua
 
         void UpdateText()
         {
-            textObject.text = Lingua.GetString(key);
+            if (textMeshProObject != null)
+                textMeshProObject.text = Lingua.GetString(key);
+            else
+                textObject.text = Lingua.GetString(key);
         }
     }
 }
