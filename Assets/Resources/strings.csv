@@ -14,10 +14,10 @@ label/server/backend/register/register,회원가입,Register
 label/server/backend/register/createnickname,닉네임 생성,Create nickname
 label/server/backend/register/invalidinformation,유효하지 않은 정보입니다,Invalid information
 label/server/backend/register/registerfailed,회원가입을 실패하였습니다. 정보를 재확인해주세요.,Registration failed. Please check the information.
-,,
-,,
-,,
-,,
+label/server/backend/login/trytologin,로그인 중,Logging in
+label/server/backend/login/badid,잘못된 ID 입니다.,Wrong ID
+label/server/backend/login/badpassword,잘못된 비밀번호입니다.,Wrong password
+label/server/backend/login/badlogin,로그인을 실패하였습니다.,Failed log in
 ,,
 ,,
 ,,
