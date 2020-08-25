@@ -211,6 +211,8 @@ public class BackEndServerManager : MonoBehaviour
             {
                 Debug.Log("커스텀 회원가입 성공");
                 tokenInfo = callback;
+                isSuccess = true;
+                isUpdateNickName = true;
                 loginSuccessFunc = func;
                 return;
             }
@@ -224,7 +226,7 @@ public class BackEndServerManager : MonoBehaviour
     // 닉네임 설정
     public void RegistNickname(string nickname, Action<bool, string> func)
     {
-        BackendAsyncClass.BackendAsync(Backend.BMember.CreateNickname, nickname, callback =>
+        BackendAsyncClass.BackendAsync(Backend.BMember.UpdateNickname, nickname, callback =>
         {
             if (callback.IsSuccess())
             {

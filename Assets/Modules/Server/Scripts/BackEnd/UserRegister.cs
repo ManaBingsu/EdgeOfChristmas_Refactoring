@@ -13,22 +13,77 @@ namespace Server.BackEnd
         enum RegisterField
         {
             ID,
-            PW
+            PW,
+            COUNT
+        }
+
+        enum LoginState
+        {
+            Idle,
+            Success,
+            Fail,
+            COUNT
         }
 
         public List<InputBlock> inputBlocks = new List<InputBlock>(2);
 
         public string KEY_NULL;
         public string KEY_LEAST_CHARACTER;
+        public string KEY_TRY_TO_REGIST;
+        public string KEY_INVALID_INFORMATION;
+        public string KEY_REGISTER_FAILED;
 
         event Action onEditID;
         event Action onEditPW;
 
         const int MIN_PASSWORD = 6;
 
+        LoginState loginState;
+        string loginMessage;
+
         private void Awake()
         {
             Initialize();
+        }
+
+        private void Update()
+        {
+            if (loginState > 0)
+            {
+                switch(loginState)
+                {
+                    case (LoginState.Success):
+                        LoadingMessage.Instance.SetActivePanel(false);
+                        Debug.Log("로비로 이동");
+                        loginState = LoginState.Idle;
+                        break;
+                    case (LoginState.Fail):
+                        LoadingMessage.Instance.SetActivePanel(false);
+                        AlertMessage.Instance.SetActivePanel(true);
+                        AlertMessage.Instance.SetMessage(loginMessage);
+                        loginState = LoginState.Idle;
+                        break;
+                }
+            }
+        }
+        public void OnClickSubmit()
+        {
+            // Check validation
+            for (int i = 0; i < (int)RegisterField.COUNT; i++)
+            {
+                if (!inputBlocks[i].isValid)
+                {
+                    AlertMessage.Instance.SetActivePanel(true);
+                    AlertMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_INVALID_INFORMATION));
+                    return;
+                }
+            }
+
+            // Try to register
+            BackEndServerManager.GetInstance().CustomSignIn(inputBlocks[(int)RegisterField.ID].field.text, inputBlocks[(int)RegisterField.PW].field.text, SubmitCallBack);
+            // On loading panel
+            LoadingMessage.Instance.SetActivePanel(true);
+            LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_TRY_TO_REGIST));
         }
 
         void Initialize()
@@ -66,21 +121,16 @@ namespace Server.BackEnd
             return false;
         }
 
-        public void OnClickSubmit()
-        {
-            // Check validation
-
-            // Try to register
-            BackEndServerManager.GetInstance().CustomSignIn(inputBlocks[(int)RegisterField.ID].field.text, inputBlocks[(int)RegisterField.PW].field.text, SubmitCallBack);
-            // On loading panel
-            LoadingMessage.Instance.SetActivePanel(true);
-        }
-
         void IDFieldCallback()
         {
             if (IsFieldEmpty((int)RegisterField.ID))
             {
+                inputBlocks[(int)RegisterField.ID].isValid = false;
                 return;
+            }
+            else
+            {
+                inputBlocks[(int)RegisterField.ID].isValid = true;
             }
         }
 
@@ -88,6 +138,7 @@ namespace Server.BackEnd
         {
             if (IsFieldEmpty((int)RegisterField.PW))
             {
+                inputBlocks[(int)RegisterField.PW].isValid = false;
                 return;
             }
             if (inputBlocks[(int)RegisterField.PW].field.text.Length < MIN_PASSWORD)
@@ -98,6 +149,7 @@ namespace Server.BackEnd
             else
             {
                 inputBlocks[(int)RegisterField.PW].stateText.text = "";
+                inputBlocks[(int)RegisterField.PW].isValid = true;
             }
         }
 
@@ -105,12 +157,12 @@ namespace Server.BackEnd
         {
             if (isSucceed)
             {
-                LoadingMessage.Instance.SetActivePanel(false);
+                loginState = LoginState.Success;
             }
             else
             {
-                AlertMessage.Instance.SetActivePanel(true);
-                AlertMessage.Instance.SetMessage(msg);
+                loginState = LoginState.Fail;
+                loginMessage = Lingua.Lingua.GetString(KEY_REGISTER_FAILED);
             }
         }
 
