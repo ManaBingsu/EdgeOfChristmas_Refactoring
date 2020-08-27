@@ -2,5 +2,26 @@ ID,KR,EN
 ,,
 label/title,엣지 오브 크리스마스,Edge of Christmas
 label/pressanykey,아무키나눌러보숑,Press any key to start
+label/server/backend/register/nullfield,정보를 입력해주세요,Please enter the information
+label/server/backend/register/specialcharacter,특수문자는 사용하실 수 없습니다,Special characters cannot be used
+label/server/backend/register/leastcharacter,최소 6자리 이상 입력해주세요.,Please enter at least 6 digits
+label/server/backend/register/trytoregist,회원가입 진행 중,Try to regist user account
+label/server/backend/register/trytoregistnickname,닉네임 생성 중,Try to regist user nickname
+label/server/backend/register/enterid,ID를 입력해주세요,Enter ID
+label/server/backend/register/enterpassword,비밀번호를 입력해주세요,Enter password
+label/server/backend/register/enternickname,닉네임을 입력해주세요,Enter nickname
+label/server/backend/register/register,회원가입,Sign up
+label/server/backend/register/createnickname,닉네임 생성,Create nickname
+label/server/backend/register/invalidinformation,유효하지 않은 정보입니다,Invalid information
+label/server/backend/register/registerfailed,회원가입을 실패하였습니다. 정보를 재확인해주세요.,Registration failed. Please check the information.
+label/server/backend/login/trytologin,로그인 중,Logging in
+label/server/backend/login/badid,잘못된 ID 입니다.,Wrong ID
+label/server/backend/login/badpassword,잘못된 비밀번호입니다.,Wrong password
+label/server/backend/login/badlogin,로그인을 실패하였습니다.,Failed log in
+label/server/backend/login/login,로그인,Sign in
+,,
+,,
+,,
+,,
 #Test,,
 test/string1,시험용 문구,For testing
