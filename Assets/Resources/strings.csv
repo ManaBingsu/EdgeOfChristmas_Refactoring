@@ -9,8 +9,8 @@ label/server/backend/register/trytoregist,회원가입 진행 중,Try to regist 
 label/server/backend/register/trytoregistnickname,닉네임 생성 중,Try to regist user nickname
 label/server/backend/register/enterid,ID를 입력해주세요,Enter ID
 label/server/backend/register/enterpassword,비밀번호를 입력해주세요,Enter password
-label/server/backend/registe/enternickname,닉네임을 입력해주세요,Enter nickname
-label/server/backend/register/register,회원가입,Register
+label/server/backend/register/enternickname,닉네임을 입력해주세요,Enter nickname
+label/server/backend/register/register,회원가입,Sign up
 label/server/backend/register/createnickname,닉네임 생성,Create nickname
 label/server/backend/register/invalidinformation,유효하지 않은 정보입니다,Invalid information
 label/server/backend/register/registerfailed,회원가입을 실패하였습니다. 정보를 재확인해주세요.,Registration failed. Please check the information.
@@ -18,7 +18,7 @@ label/server/backend/login/trytologin,로그인 중,Logging in
 label/server/backend/login/badid,잘못된 ID 입니다.,Wrong ID
 label/server/backend/login/badpassword,잘못된 비밀번호입니다.,Wrong password
 label/server/backend/login/badlogin,로그인을 실패하였습니다.,Failed log in
-,,
+label/server/backend/login/login,로그인,Sign in
 ,,
 ,,
 ,,
