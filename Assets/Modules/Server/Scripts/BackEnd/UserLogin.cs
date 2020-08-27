@@ -22,9 +22,10 @@ namespace Server.BackEnd
             Fail,
             COUNT
         }
-
+        [Header("Reference")]
         public List<InputField> inputFields = new List<InputField>(2);
 
+        [Header("Lingua Key")]
         public string KEY_TRY_TO_LOGIN;
         public string KEY_BAD_ID;
         public string KEY_BAD_PASSWORD;
@@ -46,7 +47,7 @@ namespace Server.BackEnd
                 {
                     case (LoginState.Success):
                         LoadingMessage.Instance.SetActivePanel(false);
-                        Debug.Log("로비로 이동");
+                        SceneManager.Instance.LoadScene(SceneManager.Instance.lobbySceneName);
                         loginState = LoginState.Idle;
                         break;
                     case (LoginState.Fail):
@@ -84,7 +85,7 @@ namespace Server.BackEnd
             else
             {
                 loginState = LoginState.Fail;
-                if (msg.Contains("customID"))
+                if (msg.Contains("customId"))
                 {
                     loginMessage = Lingua.Lingua.GetString(KEY_BAD_ID);
                 }
