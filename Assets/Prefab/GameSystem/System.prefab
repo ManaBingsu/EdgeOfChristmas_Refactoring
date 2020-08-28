@@ -719,6 +719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadCurtain: {fileID: 1223727004496590828}
   lobbySceneName: Lobby
+  ingameSceneName: InGameScene
 --- !u!1 &1223727005130952227
 GameObject:
   m_ObjectHideFlags: 0

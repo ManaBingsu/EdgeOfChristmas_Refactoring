@@ -15,6 +15,7 @@ namespace GameSystem
 
         [Header("Setting")]
         public string lobbySceneName;
+        public string ingameSceneName;
 
         string loadSceneName;
 

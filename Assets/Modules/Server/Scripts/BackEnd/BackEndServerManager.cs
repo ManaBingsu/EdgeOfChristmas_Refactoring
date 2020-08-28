@@ -8,6 +8,8 @@ using static BackEnd.SendQueue;
 //using GooglePlayGames;
 //using GooglePlayGames.BasicApi;
 using UnityEngine.SocialPlatforms;
+using GameSystem;
+using System.Collections;
 #if UNITY_IOS
 using UnityEngine.SignInWithApple;
 #endif
@@ -24,6 +26,8 @@ public class BackEndServerManager : MonoBehaviour
 
     private static BackEndServerManager instance;   // 인스턴스
     public bool isLogin { get; private set; }   // 로그인 여부
+
+    public bool isUpdateNickName = true;
 
     private string tempNickName;                        // 설정할 닉네임 (id와 동일)
     public string myNickName { get; private set; } = string.Empty;  // 로그인한 계정의 닉네임
@@ -149,7 +153,7 @@ public class BackEndServerManager : MonoBehaviour
             {
                 Debug.Log("커스텀 로그인 성공");
                 loginSuccessFunc = func;
-
+                isUpdateNickName = false;
                 OnPrevBackendAuthorized();
                 return;
             }
@@ -166,15 +170,15 @@ public class BackEndServerManager : MonoBehaviour
         tempNickName = id;
         Enqueue(Backend.BMember.CustomSignUp, id, pw, callback =>
         {
+            LoadingMessage.Instance.SetActivePanel(false);
             if (callback.IsSuccess())
             {
                 Debug.Log("커스텀 회원가입 성공");
                 loginSuccessFunc = func;
-
+                isUpdateNickName = true;
                 OnPrevBackendAuthorized();
                 return;
             }
-
             Debug.LogError("커스텀 회원가입 실패\n" + callback.ToString());
             func(false, string.Format(BackendError,
                 callback.GetStatusCode(), callback.GetErrorCode(), callback.GetMessage()));
@@ -329,7 +333,24 @@ public class BackEndServerManager : MonoBehaviour
     private void OnPrevBackendAuthorized()
     {
         isLogin = true;
-
+        // 닉네임 업데이트
+        if (isUpdateNickName)
+        {
+            isUpdateNickName = false;
+            Enqueue(Backend.BMember.UpdateNickname, tempNickName, bro =>
+            {
+                // 닉네임이 없으면 매치서버 접속이 안됨
+                if (!bro.IsSuccess())
+                {
+                    Debug.LogError("닉네임 생성 실패\n" + bro.ToString());
+                    return;
+                }
+                AlertMessage.Instance.SetActivePanel(true);
+                AlertMessage.Instance.SetMessage(Lingua.Lingua.GetString("label/server/backend/register/registersuccess"));
+                //OnBackendAuthorized();
+            });
+            return;
+        }
         OnBackendAuthorized();
     }
 

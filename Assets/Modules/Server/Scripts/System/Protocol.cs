@@ -2,25 +2,41 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Sever.System
+namespace Protocol
 {
     // 이벤트 타입
     public enum Type : sbyte
     {
         Key = 0,        // 키(가상 조이스틱) 입력
         PlayerMove,     // 플레이어 이동
+        PlayerRotate,   // 플레이어 회전
         PlayerAttack,   // 플레이어 공격
         PlayerDamaged,  // 플레이어 데미지 받음
         PlayerNoMove,   // 플레이어 이동 멈춤
         PlayerNoRotate, // 플레이어 회전 멈춤
         bulletInfo,
-        //GamerInfo,
+
+        AIPlayerInfo,   // AI가 존재하는 경우 AI 정보
+        LoadRoomScene,      // 룸 씬으로 전환
+        LoadGameScene,      // 인게임 씬으로 전환
         StartCount,     // 시작 카운트
         GameStart,      // 게임 시작
         GameEnd,        // 게임 종료
         GameSync,       // 플레이어 재접속 시 게임 현재 상황 싱크
         Max
     }
+
+    // 애니메이션 싱크는 사용하지 않습니다.
+    /*
+    public enum AnimIndex
+    {
+        idle = 0,
+        walk,
+        walkBack,
+        stop,
+        max
+    }
+    */
 
     // 조이스틱 키 이벤트 코드
     public static class KeyEventCode
@@ -122,6 +138,64 @@ namespace Sever.System
             this.xPos = pos.x;
             this.yPos = pos.y;
             this.zPos = pos.z;
+        }
+    }
+
+    public class AIPlayerInfo : Message
+    {
+        public SessionId m_sessionId;
+        public string m_nickname;
+        public byte m_teamNumber;
+        public int m_numberOfMatches;
+        public int m_numberOfWin;
+        public int m_numberOfDraw;
+        public int m_numberOfDefeats;
+        public int m_points;
+        public int m_mmr;
+
+        public AIPlayerInfo(MatchUserGameRecord gameRecord) : base(Type.AIPlayerInfo)
+        {
+            this.m_sessionId = gameRecord.m_sessionId;
+            this.m_nickname = gameRecord.m_nickname;
+            this.m_teamNumber = gameRecord.m_teamNumber;
+            this.m_numberOfWin = gameRecord.m_numberOfWin;
+            this.m_numberOfDraw = gameRecord.m_numberOfDraw;
+            this.m_numberOfDefeats = gameRecord.m_numberOfDefeats;
+            this.m_points = gameRecord.m_points;
+            this.m_mmr = gameRecord.m_mmr;
+            this.m_numberOfMatches = gameRecord.m_numberOfMatches;
+        }
+
+        public MatchUserGameRecord GetMatchRecord()
+        {
+            MatchUserGameRecord gameRecord = new MatchUserGameRecord();
+            gameRecord.m_sessionId = this.m_sessionId;
+            gameRecord.m_nickname = this.m_nickname;
+            gameRecord.m_numberOfMatches = this.m_numberOfMatches;
+            gameRecord.m_numberOfWin = this.m_numberOfWin;
+            gameRecord.m_numberOfDraw = this.m_numberOfDraw;
+            gameRecord.m_numberOfDefeats = this.m_numberOfDefeats;
+            gameRecord.m_mmr = this.m_mmr;
+            gameRecord.m_points = this.m_points;
+            gameRecord.m_teamNumber = this.m_teamNumber;
+
+            return gameRecord;
+        }
+    }
+
+    public class LoadRoomSceneMessage : Message
+    {
+        public LoadRoomSceneMessage() : base(Type.LoadRoomScene)
+        {
+
+        }
+    }
+
+    public class LoadGameSceneMessage : Message
+    {
+        public LoadGameSceneMessage() : base(Type.LoadGameScene)
+        {
+
         }
     }
 
