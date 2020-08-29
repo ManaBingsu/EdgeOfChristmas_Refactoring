@@ -1,6 +1,7 @@
 ﻿using BackEnd.Tcp;
 using UnityEngine;
 using System.Collections.Generic;
+using GameSystem;
 
 namespace Protocol
 {
@@ -195,7 +196,7 @@ namespace Protocol
     {
         public LoadGameSceneMessage() : base(Type.LoadGameScene)
         {
-
+            SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
         }
     }
 

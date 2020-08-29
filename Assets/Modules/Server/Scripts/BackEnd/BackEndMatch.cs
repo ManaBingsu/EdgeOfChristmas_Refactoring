@@ -259,7 +259,6 @@ public partial class BackEndMatchManager : MonoBehaviour
         inGameRoomToken = args.RoomInfo.m_inGameRoomToken;
         isSandBoxGame = args.RoomInfo.m_enableSandbox;
         LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING_SUCCESS));
-        Debug.Log("매칭 성공!");
         var info = GetMatchInfo(args.MatchCardIndate);
         if (info == null)
         {
