@@ -8,6 +8,7 @@ using System.Linq;
 using GameSystem;
 using Server.BackEnd.Dispatcher;
 using Debug = Helper.Debug;
+using Battle;
 
 /*
  * 매치매니저
@@ -551,7 +552,7 @@ public partial class BackEndMatchManager : MonoBehaviour
                 while (localQueue.Count > 0)
                 {
                     var msg = localQueue.Dequeue();
-                    //WorldManager.instance.OnRecieveForLocal(msg);
+                    BattleManager.Instance.OnRecieveForLocal(msg);
                 }
             }
         }

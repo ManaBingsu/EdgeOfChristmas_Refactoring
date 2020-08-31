@@ -46,6 +46,7 @@ public partial class BackEndMatchManager : MonoBehaviour
         if (IsHost() == true)
         {
             // 0.5초 후 ReadyToLoadRoom 함수 호출
+            //
             Invoke("ReadyToLoadRoom", 0.5f);
         }
     }
@@ -131,8 +132,10 @@ public partial class BackEndMatchManager : MonoBehaviour
     private void GameSetup()
     {
         Debug.Log("게임 시작 메시지 수신. 게임 설정 시작");
-        LoadingMessage.Instance.SetActivePanel(false);
-        SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
+        LoadingMessage.Instance.SetActivePanel(true);
+        LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING_SUCCESS));
+        OnGameReady();
+        //SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
         // 게임 시작 메시지가 오면 게임을 레디 상태로 변경
         /*if (GameManager.GetInstance().GetGameState() != GameManager.GameState.Ready)
         {
@@ -163,7 +166,7 @@ public partial class BackEndMatchManager : MonoBehaviour
         }
 
         Debug.Log("1초 후 룸 씬 전환 메시지 송신");
-        Invoke("SendChangeRoomScene", 1f);
+        Invoke("SendChangeGameScene", 1f);
     }
 
     private void SendChangeRoomScene()
@@ -421,7 +424,7 @@ public partial class BackEndMatchManager : MonoBehaviour
         {
             return false;
         }
-        /*
+        
         // 게임 설정 사전 작업 패킷 검사 
         switch (msg.type)
         {
@@ -438,9 +441,10 @@ public partial class BackEndMatchManager : MonoBehaviour
                 }
                 return true;
             case Protocol.Type.LoadGameScene:
-                GameManager.GetInstance().ChangeState(GameManager.GameState.Start);
+                LoadingMessage.Instance.SetActivePanel(false);
+                SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
                 return true;
-        }*/
+        }
         return false;
     }
 
