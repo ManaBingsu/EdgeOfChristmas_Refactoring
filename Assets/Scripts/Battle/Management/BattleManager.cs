@@ -129,20 +129,22 @@ namespace Battle
 
                 case Protocol.Type.Key:
                     KeyMessage keyMessage = DataParser.ReadJsonData<KeyMessage>(args.BinaryUserData);
-                    Debug.Log("키 명령을 받음!");
                     ProcessKeyEvent(args.From.SessionId, keyMessage);
                     break;
                 case Protocol.Type.PlayerMove:
                     PlayerMoveMessage moveMessage = DataParser.ReadJsonData<PlayerMoveMessage>(args.BinaryUserData);
-                    Debug.Log("움직이라는 명령을 받음!");
                     ProcessPlayerData(moveMessage);
                     break;
-                case Protocol.Type.PlayerAttack:
-                    PlayerAttackMessage attackMessage = DataParser.ReadJsonData<PlayerAttackMessage>(args.BinaryUserData);
-                    //ProcessPlayerData(attackMessage);
+                case Protocol.Type.PlayerJump:
+                    PlayerJumpMessage playerJumpMessage = DataParser.ReadJsonData<PlayerJumpMessage>(args.BinaryUserData);
+                    ProcessPlayerData(playerJumpMessage);
                     break;
-                case Protocol.Type.PlayerDamaged:
-                    PlayerDamegedMessage damegedMessage = DataParser.ReadJsonData<PlayerDamegedMessage>(args.BinaryUserData);
+                case Protocol.Type.PlayerUseItem:
+                    PlayerUseItemMessage useItemMessage = DataParser.ReadJsonData<PlayerUseItemMessage>(args.BinaryUserData);
+                    //ProcessPlayerData(damegedMessage);
+                    break;
+                case Protocol.Type.PlayerUseSkill:
+                    PlayerUseSkillMessage useSkillMessage = DataParser.ReadJsonData<PlayerUseSkillMessage>(args.BinaryUserData);
                     //ProcessPlayerData(damegedMessage);
                     break;
                 case Protocol.Type.PlayerNoMove:
@@ -191,13 +193,33 @@ namespace Battle
                 //호스트면 리턴
                 return;
             }
-            Vector3 moveVecotr = new Vector3(data.xDir, data.yDir, data.zDir);
+            int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (!moveVecotr.Equals(players[data.playerSession].moveVector))
+            if (players[data.playerSession].xDir != xDir)
             {
-                players[data.playerSession].SetPosition(data.xPos, data.yPos, data.zPos);
-                players[data.playerSession].SetMoveVector(moveVecotr);
+                players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
+                players[data.playerSession].SetMoveVector(xDir);
             }
+        }
+
+        private void ProcessPlayerData(PlayerJumpMessage data)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].Jump();
+        }
+
+        private void ProcessPlayerData(PlayerNoMoveMessage data)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].Jump();
         }
 
         private void ProcessKeyEvent(SessionId index, KeyMessage keyMessage)
@@ -208,28 +230,32 @@ namespace Battle
                 return;
             }
             bool isMove = false;
-            bool isAttack = false;
+            bool isJump = false;
+            bool isUseItem = false;
+            bool isUseSkill = false;
             bool isNoMove = false;
 
             int keyData = keyMessage.keyData;
 
-            Vector3 moveVecotr = Vector3.zero;
-            Vector3 attackPos = Vector3.zero;
+            int xDir = 0;
             Vector3 playerPos = players[index].GetPosition();
             if ((keyData & KeyEventCode.MOVE) == KeyEventCode.MOVE)
             {
-                moveVecotr = new Vector3(keyMessage.x, keyMessage.y, keyMessage.z);
-                moveVecotr = Vector3.Normalize(moveVecotr);
+                xDir = (int)keyMessage.x;
                 isMove = true;
             }
-            /*
-            if ((keyData & KeyEventCode.ATTACK) == KeyEventCode.ATTACK)
+            if ((keyData & KeyEventCode.JUMP) == KeyEventCode.JUMP)
             {
-                attackPos = new Vector3(keyMessage.x, keyMessage.y, keyMessage.z);
-                players[index].Attack(attackPos);
-                isAttack = true;
+                isJump = true;
             }
-            */
+            if ((keyData & KeyEventCode.USEITEM) == KeyEventCode.USEITEM)
+            {
+                isUseItem = true;
+            }
+            if ((keyData & KeyEventCode.USESKILL) == KeyEventCode.USESKILL)
+            {
+                isUseSkill = true;
+            }
             if ((keyData & KeyEventCode.NO_MOVE) == KeyEventCode.NO_MOVE)
             {
                 isNoMove = true;
@@ -237,19 +263,34 @@ namespace Battle
             
             if (isMove)
             {
-                players[index].SetMoveVector(moveVecotr);
-                PlayerMoveMessage msg = new PlayerMoveMessage(index, playerPos, moveVecotr);
+                Vector3 moveVector = players[index].GetPosition();
+                players[index].SetPosition(moveVector.x, moveVector.y, 0);
+                players[index].SetMoveVector(xDir);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
+            if (isJump)
+            {
+                players[index].Jump();
+                PlayerJumpMessage msg = new PlayerJumpMessage(index);
+                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerJumpMessage>(msg);
+            }
+            if (isUseItem)
+            {
+                PlayerUseItemMessage msg = new PlayerUseItemMessage(index, players[index].GetItemIndex());
+                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerUseItemMessage>(msg);
+            }
+            if (isUseSkill)
+            {
+                PlayerUseSkillMessage msg = new PlayerUseSkillMessage(index);
+                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerUseSkillMessage>(msg);
+            }
+
             if (isNoMove)
             {
-                PlayerNoMoveMessage msg = new PlayerNoMoveMessage(index, playerPos);
-                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerNoMoveMessage>(msg);
-            }
-            if (isAttack)
-            {
-                PlayerAttackMessage msg = new PlayerAttackMessage(index, attackPos);
-                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerAttackMessage>(msg);
+                players[index].SetMoveVector(xDir);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData);
+                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
         }
     }

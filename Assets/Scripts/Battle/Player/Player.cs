@@ -4,11 +4,18 @@ using UnityEngine;
 
 namespace Battle
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
+        private Rigidbody2D body;
+        public int xDir { get; set; }
+
         private bool isMove = false;
 
-        public Vector3 moveVector { get; private set; }
+        private void Awake()
+        {
+            body = GetComponent<Rigidbody2D>();
+        }
 
         private void Update()
         {
@@ -23,6 +30,11 @@ namespace Battle
             return transform.position;
         }
 
+        public int GetItemIndex()
+        {
+            return 0;
+        }
+
         public void SetPosition(float x, float y, float z)
         {
             Vector3 pos = new Vector3(x, y, z);
@@ -34,11 +46,11 @@ namespace Battle
             gameObject.transform.position = pos;
         }
 
-        public void SetMoveVector(Vector3 vector)
+        public void SetMoveVector(int xDir)
         {
-            moveVector = vector;
+            this.xDir = xDir;
 
-            if (vector == Vector3.zero)
+            if (xDir == 0)
             {
                 isMove = false;
             }
@@ -50,7 +62,12 @@ namespace Battle
 
         public void Move()
         {
-            transform.position += moveVector * Time.deltaTime;
+            transform.position += Vector3.right * 2 * xDir * Time.deltaTime;
+        }
+
+        public void Jump()
+        {
+            body.AddForce(new Vector3(0, 5, 0), ForceMode2D.Impulse);
         }
     }
 }

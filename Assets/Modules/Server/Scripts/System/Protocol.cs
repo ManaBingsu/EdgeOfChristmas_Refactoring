@@ -10,12 +10,10 @@ namespace Protocol
     {
         Key = 0,        // 키(가상 조이스틱) 입력
         PlayerMove,     // 플레이어 이동
-        PlayerRotate,   // 플레이어 회전
-        PlayerAttack,   // 플레이어 공격
-        PlayerDamaged,  // 플레이어 데미지 받음
+        PlayerJump,     // 플레이어 점프
+        PlayerUseItem,   // 플레이어 아이템 사용
+        PlayerUseSkill,  // 플레이어 스킬 사용
         PlayerNoMove,   // 플레이어 이동 멈춤
-        PlayerNoRotate, // 플레이어 회전 멈춤
-        bulletInfo,
 
         AIPlayerInfo,   // AI가 존재하는 경우 AI 정보
         LoadRoomScene,      // 룸 씬으로 전환
@@ -27,28 +25,16 @@ namespace Protocol
         Max
     }
 
-    // 애니메이션 싱크는 사용하지 않습니다.
-    /*
-    public enum AnimIndex
-    {
-        idle = 0,
-        walk,
-        walkBack,
-        stop,
-        max
-    }
-    */
-
     // 조이스틱 키 이벤트 코드
     public static class KeyEventCode
     {
         public const int NONE = 0;
         public const int MOVE = 1;      // 이동 메시지
-        public const int ATTACK = 2;    // 공격 메시지
-        public const int NO_MOVE = 4;   // 이동 멈춤 메시지
+        public const int JUMP = 2;      // 점프 메시지
+        public const int USEITEM = 3;    // 아이템 사용 메시지
+        public const int USESKILL = 4;      // 스킬 사용 메시지
+        public const int NO_MOVE = 5;   // 이동 멈춤 메시지
     }
-
-
 
     public class Message
     {
@@ -81,49 +67,43 @@ namespace Protocol
         public SessionId playerSession;
         public float xPos;
         public float yPos;
-        public float zPos;
-        public float xDir;
-        public float yDir;
-        public float zDir;
-        public PlayerMoveMessage(SessionId session, Vector3 pos, Vector3 dir) : base(Type.PlayerMove)
+
+        public int xDir;
+        public PlayerMoveMessage(SessionId session, Vector2 pos, int xDir) : base(Type.PlayerMove)
         {
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
-            this.zPos = pos.z;
-            this.xDir = dir.x;
-            this.yDir = dir.y;
-            this.zDir = dir.z;
+            this.xDir = xDir;
         }
     }
 
-    public class PlayerAttackMessage : Message
+    public class PlayerJumpMessage : Message
     {
         public SessionId playerSession;
-        public float dir_x;
-        public float dir_y;
-        public float dir_z;
-        public PlayerAttackMessage(SessionId session, Vector3 pos) : base(Type.PlayerAttack)
+
+        public PlayerJumpMessage(SessionId session) : base(Type.PlayerJump)
         {
             this.playerSession = session;
-            dir_x = pos.x;
-            dir_y = pos.y;
-            dir_z = pos.z;
         }
     }
 
-    public class PlayerDamegedMessage : Message
+    public class PlayerUseItemMessage : Message
     {
         public SessionId playerSession;
-        public float hit_x;
-        public float hit_y;
-        public float hit_z;
-        public PlayerDamegedMessage(SessionId session, float x, float y, float z) : base(Type.PlayerDamaged)
+        public int itemIndex;
+        public PlayerUseItemMessage(SessionId session, int itemIndex) : base(Type.PlayerUseItem)
         {
             this.playerSession = session;
-            this.hit_x = x;
-            this.hit_y = y;
-            this.hit_z = z;
+            this.itemIndex = itemIndex;
+        }
+    }
+    public class PlayerUseSkillMessage : Message
+    {
+        public SessionId playerSession;
+        public PlayerUseSkillMessage(SessionId session) : base(Type.PlayerUseSkill)
+        {
+            this.playerSession = session;
         }
     }
 
@@ -132,13 +112,11 @@ namespace Protocol
         public SessionId playerSession;
         public float xPos;
         public float yPos;
-        public float zPos;
-        public PlayerNoMoveMessage(SessionId session, Vector3 pos) : base(Type.PlayerNoMove)
+        public PlayerNoMoveMessage(SessionId session, Vector2 pos) : base(Type.PlayerNoMove)
         {
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
-            this.zPos = pos.z;
         }
     }
 

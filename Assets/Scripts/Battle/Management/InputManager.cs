@@ -7,23 +7,37 @@ namespace Battle.Management
 {
     public class InputManager : MonoBehaviour
     {
+        bool isMove = false;
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                InputMove();
+                InputMove(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                InputMove(-1);
             }
 
-            if (Input.GetKey(KeyCode.Z))
+            if (Input.GetKeyUp(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
             {
                 InputStop();
             }
+            else if (Input.GetKeyUp(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+            {
+                InputStop();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                InputJump();
+            }
         }
-        private void InputMove()
+        private void InputMove(int xDir)
         {
             int keyCode = 0;
             keyCode |= KeyEventCode.MOVE;
-            Vector3 moveVector = new Vector3(1, 0, 0);
+            Vector3 moveVector = new Vector3(xDir, 0, 0);
 
             KeyMessage msg;
             msg = new KeyMessage(keyCode, moveVector);
@@ -43,7 +57,23 @@ namespace Battle.Management
             keyCode |= KeyEventCode.MOVE;
             Vector3 moveVector = new Vector3(0, 0, 0);
 
-            Debug.Log("haha");
+            KeyMessage msg;
+            msg = new KeyMessage(keyCode, moveVector);
+            if (BackEndMatchManager.GetInstance().IsHost())
+            {
+                BackEndMatchManager.GetInstance().AddMsgToLocalQueue(msg);
+            }
+            else
+            {
+                BackEndMatchManager.GetInstance().SendDataToInGame<KeyMessage>(msg);
+            }
+        }
+
+        private void InputJump()
+        {
+            int keyCode = 0;
+            keyCode |= KeyEventCode.JUMP;
+            Vector3 moveVector = new Vector3(0, 0, 0);
 
             KeyMessage msg;
             msg = new KeyMessage(keyCode, moveVector);
