@@ -11,9 +11,13 @@ namespace GameSystem
         private void Awake()
         {
             if (Instance == null)
+            {
                 Instance = this;
+            }
             else
+            {
                 DestroyImmediate(this.gameObject);
+            }
             DontDestroyOnLoad(this.gameObject);
         }
     }

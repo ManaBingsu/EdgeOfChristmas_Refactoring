@@ -1,20 +1,23 @@
 ﻿using BackEnd.Tcp;
 using UnityEngine;
 using System.Collections.Generic;
+using GameSystem;
 
-namespace Sever.System
+namespace Protocol
 {
     // 이벤트 타입
     public enum Type : sbyte
     {
         Key = 0,        // 키(가상 조이스틱) 입력
         PlayerMove,     // 플레이어 이동
-        PlayerAttack,   // 플레이어 공격
-        PlayerDamaged,  // 플레이어 데미지 받음
+        PlayerJump,     // 플레이어 점프
+        PlayerUseItem,   // 플레이어 아이템 사용
+        PlayerUseSkill,  // 플레이어 스킬 사용
         PlayerNoMove,   // 플레이어 이동 멈춤
-        PlayerNoRotate, // 플레이어 회전 멈춤
-        bulletInfo,
-        //GamerInfo,
+
+        AIPlayerInfo,   // AI가 존재하는 경우 AI 정보
+        LoadRoomScene,      // 룸 씬으로 전환
+        LoadGameScene,      // 인게임 씬으로 전환
         StartCount,     // 시작 카운트
         GameStart,      // 게임 시작
         GameEnd,        // 게임 종료
@@ -27,11 +30,11 @@ namespace Sever.System
     {
         public const int NONE = 0;
         public const int MOVE = 1;      // 이동 메시지
-        public const int ATTACK = 2;    // 공격 메시지
-        public const int NO_MOVE = 4;   // 이동 멈춤 메시지
+        public const int JUMP = 2;      // 점프 메시지
+        public const int USEITEM = 3;    // 아이템 사용 메시지
+        public const int USESKILL = 4;      // 스킬 사용 메시지
+        public const int NO_MOVE = 5;   // 이동 멈춤 메시지
     }
-
-
 
     public class Message
     {
@@ -64,49 +67,43 @@ namespace Sever.System
         public SessionId playerSession;
         public float xPos;
         public float yPos;
-        public float zPos;
-        public float xDir;
-        public float yDir;
-        public float zDir;
-        public PlayerMoveMessage(SessionId session, Vector3 pos, Vector3 dir) : base(Type.PlayerMove)
+
+        public int xDir;
+        public PlayerMoveMessage(SessionId session, Vector2 pos, int xDir) : base(Type.PlayerMove)
         {
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
-            this.zPos = pos.z;
-            this.xDir = dir.x;
-            this.yDir = dir.y;
-            this.zDir = dir.z;
+            this.xDir = xDir;
         }
     }
 
-    public class PlayerAttackMessage : Message
+    public class PlayerJumpMessage : Message
     {
         public SessionId playerSession;
-        public float dir_x;
-        public float dir_y;
-        public float dir_z;
-        public PlayerAttackMessage(SessionId session, Vector3 pos) : base(Type.PlayerAttack)
+
+        public PlayerJumpMessage(SessionId session) : base(Type.PlayerJump)
         {
             this.playerSession = session;
-            dir_x = pos.x;
-            dir_y = pos.y;
-            dir_z = pos.z;
         }
     }
 
-    public class PlayerDamegedMessage : Message
+    public class PlayerUseItemMessage : Message
     {
         public SessionId playerSession;
-        public float hit_x;
-        public float hit_y;
-        public float hit_z;
-        public PlayerDamegedMessage(SessionId session, float x, float y, float z) : base(Type.PlayerDamaged)
+        public int itemIndex;
+        public PlayerUseItemMessage(SessionId session, int itemIndex) : base(Type.PlayerUseItem)
         {
             this.playerSession = session;
-            this.hit_x = x;
-            this.hit_y = y;
-            this.hit_z = z;
+            this.itemIndex = itemIndex;
+        }
+    }
+    public class PlayerUseSkillMessage : Message
+    {
+        public SessionId playerSession;
+        public PlayerUseSkillMessage(SessionId session) : base(Type.PlayerUseSkill)
+        {
+            this.playerSession = session;
         }
     }
 
@@ -115,13 +112,69 @@ namespace Sever.System
         public SessionId playerSession;
         public float xPos;
         public float yPos;
-        public float zPos;
-        public PlayerNoMoveMessage(SessionId session, Vector3 pos) : base(Type.PlayerNoMove)
+        public PlayerNoMoveMessage(SessionId session, Vector2 pos) : base(Type.PlayerNoMove)
         {
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
-            this.zPos = pos.z;
+        }
+    }
+
+    public class AIPlayerInfo : Message
+    {
+        public SessionId m_sessionId;
+        public string m_nickname;
+        public byte m_teamNumber;
+        public int m_numberOfMatches;
+        public int m_numberOfWin;
+        public int m_numberOfDraw;
+        public int m_numberOfDefeats;
+        public int m_points;
+        public int m_mmr;
+
+        public AIPlayerInfo(MatchUserGameRecord gameRecord) : base(Type.AIPlayerInfo)
+        {
+            this.m_sessionId = gameRecord.m_sessionId;
+            this.m_nickname = gameRecord.m_nickname;
+            this.m_teamNumber = gameRecord.m_teamNumber;
+            this.m_numberOfWin = gameRecord.m_numberOfWin;
+            this.m_numberOfDraw = gameRecord.m_numberOfDraw;
+            this.m_numberOfDefeats = gameRecord.m_numberOfDefeats;
+            this.m_points = gameRecord.m_points;
+            this.m_mmr = gameRecord.m_mmr;
+            this.m_numberOfMatches = gameRecord.m_numberOfMatches;
+        }
+
+        public MatchUserGameRecord GetMatchRecord()
+        {
+            MatchUserGameRecord gameRecord = new MatchUserGameRecord();
+            gameRecord.m_sessionId = this.m_sessionId;
+            gameRecord.m_nickname = this.m_nickname;
+            gameRecord.m_numberOfMatches = this.m_numberOfMatches;
+            gameRecord.m_numberOfWin = this.m_numberOfWin;
+            gameRecord.m_numberOfDraw = this.m_numberOfDraw;
+            gameRecord.m_numberOfDefeats = this.m_numberOfDefeats;
+            gameRecord.m_mmr = this.m_mmr;
+            gameRecord.m_points = this.m_points;
+            gameRecord.m_teamNumber = this.m_teamNumber;
+
+            return gameRecord;
+        }
+    }
+
+    public class LoadRoomSceneMessage : Message
+    {
+        public LoadRoomSceneMessage() : base(Type.LoadRoomScene)
+        {
+
+        }
+    }
+
+    public class LoadGameSceneMessage : Message
+    {
+        public LoadGameSceneMessage() : base(Type.LoadGameScene)
+        {
+            SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
         }
     }
 

@@ -16,12 +16,13 @@ namespace GameSystem
 
         public IEnumerator FadeIn()
         {
-            yield return null;
             animator.SetTrigger("TrgBeginLoad");
+            yield return null;
         }
 
         public IEnumerator FadeOut()
         {
+            yield return null;
             yield return null;
             animator.SetTrigger("TrgEndLoad");
         }

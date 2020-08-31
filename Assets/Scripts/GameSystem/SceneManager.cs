@@ -12,9 +12,12 @@ namespace GameSystem
         [Header("Reference")]
         [SerializeField]
         LoadCurtain loadCurtain;
+        [SerializeField]
+        GameObject preventTouchPanel;
 
         [Header("Setting")]
         public string lobbySceneName;
+        public string ingameSceneName;
 
         string loadSceneName;
 
@@ -38,6 +41,7 @@ namespace GameSystem
             AsyncOperation op = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
             op.allowSceneActivation = false;
 
+            preventTouchPanel.SetActive(true);
             loadCurtain.gameObject.SetActive(true);
             loadCurtain.StartCoroutine(loadCurtain.FadeIn());
 
@@ -58,6 +62,7 @@ namespace GameSystem
         {
             if (scene.name == loadSceneName)
             {
+                preventTouchPanel.SetActive(false);
                 StartCoroutine(loadCurtain.FadeOut());
                 UnityEngine.SceneManagement.SceneManager.sceneLoaded -= LoadSceneEnd;
             }

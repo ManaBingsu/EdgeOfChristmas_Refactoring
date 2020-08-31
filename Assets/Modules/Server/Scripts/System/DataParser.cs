@@ -1,8 +1,7 @@
 ﻿using System.Text;
 using UnityEngine;
 
-namespace Server.System
-{
+
     public class DataParser : MonoBehaviour
     {
         #region json
@@ -22,4 +21,4 @@ namespace Server.System
         #endregion
     }
 
-}
+

@@ -8,6 +8,7 @@ namespace Server.BackEnd
 {
     public class NicknameRegister : MonoBehaviour
     {
+        /*
         event Action onEditNickname;
 
 
@@ -77,7 +78,7 @@ namespace Server.BackEnd
                 stateText.text = "";
             }
         }
-
+        */
     }
 }
 
