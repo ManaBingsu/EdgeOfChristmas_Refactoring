@@ -33,6 +33,10 @@ public partial class BackEndMatchManager : MonoBehaviour
     private string KEY_MATCHING;
     [SerializeField]
     private string KEY_MATCHING_SUCCESS;
+    [SerializeField]
+    private string KEY_CREATING_WAITINGROOM;
+    [SerializeField]
+    private string KEY_CREATING_WAITINGROOM_FAILED;
 
     // 콘솔에서 생성한 매칭 카드 정보
     [Serializable]
@@ -258,7 +262,12 @@ public partial class BackEndMatchManager : MonoBehaviour
         Backend.Match.OnMatchMakingRoomCreate += (args) =>
         {
             Debug.Log("OnMatchMakingRoomCreate : " + args.ErrInfo + " : " + args.Reason);
-
+            LoadingMessage.Instance.SetActivePanel(false);
+            if (args.ErrInfo.Equals(ErrorCode.Success) == false)
+            {
+                AlertMessage.Instance.SetActivePanel(true);
+                AlertMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_CREATING_WAITINGROOM_FAILED));
+            }
             //LobbyUI.GetInstance().CreateRoomResult(args.ErrInfo.Equals(ErrorCode.Success) == true);
         };
 

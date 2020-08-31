@@ -81,6 +81,8 @@ public partial class BackEndMatchManager : MonoBehaviour
             //return false;
         }
         Debug.Log("방 생성 요청을 서버로 보냄");
+        LoadingMessage.Instance.SetActivePanel(true);
+        LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_CREATING_WAITINGROOM));
         Backend.Match.CreateMatchRoom();
         //return true;
     }
@@ -166,12 +168,15 @@ public partial class BackEndMatchManager : MonoBehaviour
             case ErrorCode.Success:
                 // 매칭 성공했을 때
                 debugLog = string.Format(SUCCESS_MATCHMAKE, args.Reason);
+                LoadingMessage.Instance.SetActivePanel(true);
+                LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING_SUCCESS));
                 //LobbyUI.GetInstance().MatchDoneCallback();
                 ProcessMatchSuccess(args);
                 break;
             case ErrorCode.Match_InProgress:
                 // 매칭 신청 성공했을 때 or 매칭 중일 때 매칭 신청을 시도했을 때
-
+                LoadingMessage.Instance.SetActivePanel(true);
+                LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING));
                 // 매칭 신청 성공했을 때
                 if (args.Reason == string.Empty)
                 {
@@ -225,8 +230,7 @@ public partial class BackEndMatchManager : MonoBehaviour
         if (!debugLog.Equals(string.Empty))
         {
             Debug.Log(debugLog);
-            LoadingMessage.Instance.SetActivePanel(true);
-            LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING));
+
             if (isError == true)
             {
                 //LobbyUI.GetInstance().SetErrorObject(debugLog);
@@ -258,8 +262,6 @@ public partial class BackEndMatchManager : MonoBehaviour
         isReconnectProcess = false;
         inGameRoomToken = args.RoomInfo.m_inGameRoomToken;
         isSandBoxGame = args.RoomInfo.m_enableSandbox;
-        LoadingMessage.Instance.SetMessage(Lingua.Lingua.GetString(KEY_MATCHING_SUCCESS));
-        Debug.Log("매칭 성공!");
         var info = GetMatchInfo(args.MatchCardIndate);
         if (info == null)
         {
