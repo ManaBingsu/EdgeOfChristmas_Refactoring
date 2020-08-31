@@ -30,7 +30,7 @@ MonoBehaviour:
     fileType: 1
     url: https://docs.google.com/spreadsheets/export?format=csv&id=1hlWi3AX_ezlTv7YnV2NKR7oPfs3P1KB_W6LYEKL_mow
     filePath: Assets/Resources/strings.csv
-    lastFileHash: 3f05fbdd283920923b75891d0ca1f847
+    lastFileHash: a9fe23bef619c7213d55e8cbf176c16b
     label: 
     assetReference: {fileID: 4900000, guid: de0dc0c57e768a349954ea5af29b84eb, type: 3}
   autoRefresh: 0

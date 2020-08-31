@@ -26,7 +26,7 @@ label/lobby/match/connectingtomatchserver,매치 서버 접속 중,Connecting to
 label/lobby/match/matching,매칭 중,Matching
 label/lobby/match/matchingsuccess,매칭이 성사되었습니다. 게임이 곧 시작됩니다.,Success matching. The game starts soon.
 label/lobby/match/creatingroom,대기방 생성중,Creating a waiting room
-,,
+label/lobby/match/creatingroomfailed,대기방 생성을 실패하였습니다.,Failed to create a waiting room
 ,,
 ,,
 ,,

@@ -43,9 +43,10 @@ public class BackEndServerManager : MonoBehaviour
         {
             Destroy(instance);
         }
-        instance = this;
-        // 모든 씬에서 유지
-        DontDestroyOnLoad(this.gameObject);
+        else
+        {
+            instance = this;
+        }
     }
 
     public static BackEndServerManager GetInstance()

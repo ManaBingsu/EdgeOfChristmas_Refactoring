@@ -83,6 +83,7 @@ public partial class BackEndMatchManager : MonoBehaviour
             Destroy(instance);
         }
         instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public static BackEndMatchManager GetInstance()
@@ -470,13 +471,13 @@ public partial class BackEndMatchManager : MonoBehaviour
                 return;
             }
 
-            /*if (WorldManager.instance == null)
+            if (BattleManager.Instance == null)
             {
                 // 월드 매니저가 존재하지 않으면 바로 리턴
                 return;
             }
 
-            WorldManager.instance.OnRecieve(args);*/
+            BattleManager.Instance.OnRecieve(args);
         };
 
         Backend.Match.OnMatchChat += (args) =>

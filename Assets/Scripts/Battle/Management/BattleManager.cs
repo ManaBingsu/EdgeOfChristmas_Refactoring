@@ -12,6 +12,11 @@ namespace Battle
 
         private Dictionary<SessionId, Player> players;
 
+        [SerializeField]
+        private GameObject playerPrefab;
+
+        private SessionId myPlayerIndex = SessionId.None;
+
         private void Awake()
         {
             if (Instance == null)
@@ -25,9 +30,63 @@ namespace Battle
             players = new Dictionary<SessionId, Player>();
             var gamers = BackEndMatchManager.GetInstance().sessionIdList;
             BackEndMatchManager.GetInstance().SetPlayerSessionList(gamers);
+
+            SetPlayerInfo();
         }
 
-        public int myIndex;
+        public void SetPlayerInfo()
+        {
+            if (BackEndMatchManager.GetInstance().sessionIdList == null)
+            {
+                // 현재 세션ID 리스트가 존재하지 않으면, 0.5초 후 다시 실행
+                Invoke("SetPlayerInfo", 0.5f);
+                return;
+            }
+            var gamers = BackEndMatchManager.GetInstance().sessionIdList;
+            int size = gamers.Count;
+            if (size <= 0)
+            {
+                Debug.Log("No Player Exist!");
+                return;
+            }
+            /*if (size > MAXPLAYER)
+            {
+                Debug.Log("Player Pool Exceed!");
+                return;
+            }*/
+
+            players = new Dictionary<SessionId, Player>();
+            BackEndMatchManager.GetInstance().SetPlayerSessionList(gamers);
+
+            int index = 0;
+            foreach (var sessionId in gamers)
+            {
+                GameObject player = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+                players.Add(sessionId, player.GetComponent<Player>());
+
+                if (BackEndMatchManager.GetInstance().IsMySessionId(sessionId))
+                {
+                    myPlayerIndex = sessionId;
+                    //players[sessionId].Initialize(true, myPlayerIndex, BackEndMatchManager.GetInstance().GetNickNameBySessionId(sessionId), statringPoints[index].w);
+                }
+                else
+                {
+                    //players[sessionId].Initialize(false, sessionId, BackEndMatchManager.GetInstance().GetNickNameBySessionId(sessionId), statringPoints[index].w);
+                }
+                index += 1;
+            }
+            Debug.Log("Num Of Current Player : " + size);
+            /*
+            // 스코어 보드 설정
+            alivePlayer = size;
+            InGameUiManager.GetInstance().SetScoreBoard(alivePlayer);
+
+            if (BackEndMatchManager.GetInstance().IsHost())
+            {
+                StartCoroutine("StartCount");
+            }*/
+        }
 
         public void OnRecieve(MatchRelayEventArgs args)
         {
@@ -70,23 +129,25 @@ namespace Battle
 
                 case Protocol.Type.Key:
                     KeyMessage keyMessage = DataParser.ReadJsonData<KeyMessage>(args.BinaryUserData);
+                    Debug.Log("키 명령을 받음!");
                     ProcessKeyEvent(args.From.SessionId, keyMessage);
                     break;
                 case Protocol.Type.PlayerMove:
                     PlayerMoveMessage moveMessage = DataParser.ReadJsonData<PlayerMoveMessage>(args.BinaryUserData);
+                    Debug.Log("움직이라는 명령을 받음!");
                     ProcessPlayerData(moveMessage);
                     break;
                 case Protocol.Type.PlayerAttack:
                     PlayerAttackMessage attackMessage = DataParser.ReadJsonData<PlayerAttackMessage>(args.BinaryUserData);
-                    ProcessPlayerData(attackMessage);
+                    //ProcessPlayerData(attackMessage);
                     break;
                 case Protocol.Type.PlayerDamaged:
                     PlayerDamegedMessage damegedMessage = DataParser.ReadJsonData<PlayerDamegedMessage>(args.BinaryUserData);
-                    ProcessPlayerData(damegedMessage);
+                    //ProcessPlayerData(damegedMessage);
                     break;
                 case Protocol.Type.PlayerNoMove:
                     PlayerNoMoveMessage noMoveMessage = DataParser.ReadJsonData<PlayerNoMoveMessage>(args.BinaryUserData);
-                    ProcessPlayerData(noMoveMessage);
+                    //ProcessPlayerData(noMoveMessage);
                     break;
                 case Protocol.Type.GameSync:
                     GameSyncMessage syncMessage = DataParser.ReadJsonData<GameSyncMessage>(args.BinaryUserData);
@@ -99,9 +160,9 @@ namespace Battle
             }
         }
 
-        public void OnRecieveForLocal(PlayerMoveMessage message)
+        public void OnRecieveForLocal(KeyMessage keyMessage)
         {
-            ProcessPlayerData(message);
+            ProcessKeyEvent(myPlayerIndex, keyMessage);
         }
 
         private void ProcessSyncData(GameSyncMessage syncMessage)

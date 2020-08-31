@@ -8,6 +8,8 @@ namespace Battle
     {
         private bool isMove = false;
 
+        public Vector3 moveVector { get; private set; }
+
         private void Update()
         {
             if (isMove)
@@ -21,11 +23,20 @@ namespace Battle
             return transform.position;
         }
 
-        public Vector3 moveVector;
+        public void SetPosition(float x, float y, float z)
+        {
+            Vector3 pos = new Vector3(x, y, z);
+            SetPosition(pos);
+        }
+
+        public void SetPosition(Vector3 pos)
+        {
+            gameObject.transform.position = pos;
+        }
 
         public void SetMoveVector(Vector3 vector)
         {
-            //moveVector = vector;
+            moveVector = vector;
 
             if (vector == Vector3.zero)
             {
@@ -39,7 +50,7 @@ namespace Battle
 
         public void Move()
         {
-            transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
+            transform.position += moveVector * Time.deltaTime;
         }
     }
 }
