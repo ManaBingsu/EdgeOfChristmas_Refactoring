@@ -11,7 +11,9 @@ namespace Protocol
         Key = 0,        // 키(가상 조이스틱) 입력
         PlayerMove,     // 플레이어 이동
         PlayerJump,     // 플레이어 점프
+        PlayerGetItem,
         PlayerUseItem,   // 플레이어 아이템 사용
+        PlayerGetScore,
         PlayerUseSkill,  // 플레이어 스킬 사용
         PlayerNoMove,   // 플레이어 이동 멈춤
 
