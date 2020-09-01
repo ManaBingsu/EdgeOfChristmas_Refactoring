@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Battle
 {
-    public class BattleManager : MonoBehaviour
+    public partial class BattleManager : MonoBehaviour
     {
         public static BattleManager Instance;
 
@@ -23,15 +23,34 @@ namespace Battle
                 Instance = this;
             else
                 DestroyImmediate(this.gameObject);
+
+            InitStateEvents();
+            RegistEvent();
         }
 
         private void Start()
         {
             players = new Dictionary<SessionId, Player>();
-            var gamers = BackEndMatchManager.GetInstance().sessionIdList;
-            BackEndMatchManager.GetInstance().SetPlayerSessionList(gamers);
+            if (BackEndMatchManager.GetInstance() != null)
+            {
+                var gamers = BackEndMatchManager.GetInstance().sessionIdList;
+                BackEndMatchManager.GetInstance().SetPlayerSessionList(gamers);
+                gameRecord = new Stack<SessionId>();
+                SetPlayerInfo();
+            }
 
-            SetPlayerInfo();
+            StartCoroutine(StartTimer());
+        }
+
+        private IEnumerator StartTimer()
+        {
+            float time = 0f;
+            while (time <= 1f)
+            {
+                time += Time.deltaTime;
+                yield return null;
+            }
+            FlowState = EFlowState.Start;
         }
 
         public void SetPlayerInfo()

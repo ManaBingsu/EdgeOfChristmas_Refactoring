@@ -3,13 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Battle.Management
+namespace Battle
 {
     public class InputManager : MonoBehaviour
     {
         bool isMove = false;
+        private void Start()
+        {
+            VirtualStick.Instance.xDirChangeEvent += InputMove;
+        }
         private void Update()
         {
+            InputControl();
+        }
+
+        private void InputControl()
+        {
+
+
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 InputMove(1);
@@ -33,8 +44,12 @@ namespace Battle.Management
                 InputJump();
             }
         }
+
         private void InputMove(int xDir)
         {
+            if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
+                return;
+
             int keyCode = 0;
             keyCode |= KeyEventCode.MOVE;
             Vector3 moveVector = new Vector3(xDir, 0, 0);
@@ -53,6 +68,9 @@ namespace Battle.Management
 
         private void InputStop()
         {
+            if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
+                return;
+
             int keyCode = 0;
             keyCode |= KeyEventCode.MOVE;
             Vector3 moveVector = new Vector3(0, 0, 0);

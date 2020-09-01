@@ -7,6 +7,10 @@ namespace Battle
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
+        public bool IsWinner { get; set; }
+
+        public int winCount;
+
         private Rigidbody2D body;
         public int xDir { get; set; }
 
