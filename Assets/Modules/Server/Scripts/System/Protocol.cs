@@ -11,9 +11,13 @@ namespace Protocol
         Key = 0,        // 키(가상 조이스틱) 입력
         PlayerMove,     // 플레이어 이동
         PlayerJump,     // 플레이어 점프
+        PlayerGetItem,
         PlayerUseItem,   // 플레이어 아이템 사용
+        PlayerGetScore,
         PlayerUseSkill,  // 플레이어 스킬 사용
         PlayerNoMove,   // 플레이어 이동 멈춤
+
+        SpawnItem,
 
         AIPlayerInfo,   // AI가 존재하는 경우 AI 정보
         LoadRoomScene,      // 룸 씬으로 전환
@@ -98,10 +102,31 @@ namespace Protocol
             this.itemIndex = itemIndex;
         }
     }
+
+    public class PlayerGetItemMessage : Message
+    {
+        public SessionId playerSession;
+        public int itemIndex;
+        public PlayerGetItemMessage(SessionId session, int itemIndex) : base(Type.PlayerGetItem)
+        {
+            this.playerSession = session;
+            this.itemIndex = itemIndex;
+        }
+    }
+
     public class PlayerUseSkillMessage : Message
     {
         public SessionId playerSession;
         public PlayerUseSkillMessage(SessionId session) : base(Type.PlayerUseSkill)
+        {
+            this.playerSession = session;
+        }
+    }
+
+    public class PlayerGetScoreMessage : Message
+    {
+        public SessionId playerSession;
+        public PlayerGetScoreMessage(SessionId session) : base(Type.PlayerGetScore)
         {
             this.playerSession = session;
         }
@@ -117,6 +142,22 @@ namespace Protocol
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
+        }
+    }
+
+    public class SpawnItemMessage : Message
+    {
+        public int itemIndex;
+        public float xPos;
+        public float speed;
+        public float rotate;
+
+        public SpawnItemMessage(int itemIndex, float xPos, float speed, float rotate) : base(Type.SpawnItem)
+        {
+            this.itemIndex = itemIndex;
+            this.xPos = xPos;
+            this.speed = speed;
+            this.rotate = rotate;
         }
     }
 
@@ -174,7 +215,7 @@ namespace Protocol
     {
         public LoadGameSceneMessage() : base(Type.LoadGameScene)
         {
-            SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
+            // SceneManager.Instance.LoadScene(SceneManager.Instance.ingameSceneName);
         }
     }
 

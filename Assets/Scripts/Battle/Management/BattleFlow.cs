@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-namespace Battle.Management
+namespace Battle
 {
     [Serializable]
-    public class BattleFlow
+    public partial class BattleManager : MonoBehaviour
     {
         public enum EFlowState
         {
             Idle,
-            Ready,
+            Start,
             Progress,
-            Pause,
+            RoundEnd,
             Result,
             COUNT
         }
@@ -25,6 +25,8 @@ namespace Battle.Management
             get => flowState;
             set
             {
+                if (value == flowState)
+                    return;
                 flowState = value;
                 StateEvents[(int)flowState]();
             }
@@ -32,23 +34,12 @@ namespace Battle.Management
 
         public Action[] StateEvents { get; set; }
 
-        public BattleFlow()
-        {
-            InitField();
-            InitState();
-        }
-
-        public void InitState()
-        {
-            FlowState = EFlowState.Ready;
-        }
-
-        void InitField()
+        void InitStateEvents()
         {
             StateEvents = new Action[(int)EFlowState.COUNT];
             for (int i = 0; i < StateEvents.Length; i++)
             {
-                StateEvents[i] = new Action(() => { });
+                StateEvents[i] = new Action(delegate { });
             }
         }
     }

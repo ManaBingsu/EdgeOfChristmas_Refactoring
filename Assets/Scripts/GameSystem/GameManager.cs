@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace GameSystem
 {
-    public class SystemManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
-        public static SystemManager Instance;
+        public static GameManager Instance;
 
         private void Awake()
         {
@@ -19,6 +19,14 @@ namespace GameSystem
                 DestroyImmediate(this.gameObject);
             }
             DontDestroyOnLoad(this.gameObject);
+        }
+
+        private void Initialize()
+        {
+            // 60프레임 고정
+            Application.targetFrameRate = 60;
+            // 게임중 슬립모드 해제
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
     }
 }

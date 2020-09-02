@@ -112,6 +112,7 @@ public partial class BackEndMatchManager : MonoBehaviour
         //GameManager.OnRobby += IsMatchGameActivate;
         //GameManager.OnGameReady += OnGameReady;
         //GameManager.OnGameReconnect += OnGameReconnect;
+
         // 핸들러 설정
         MatchMakingHandler();
         GameHandler();
@@ -385,7 +386,6 @@ public partial class BackEndMatchManager : MonoBehaviour
                     if (args.ErrInfo.Reason.Equals("Reconnect Success"))
                     {
                         //재접속 성공
-                        //GameManager.GetInstance().ChangeState(GameManager.GameState.Reconnect);
                         Debug.Log("재접속 성공");
                     }
                     else if (args.ErrInfo.Reason.Equals("Fail To Reconnect"))

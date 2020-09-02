@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Battle.Management;
+using Battle;
 using System;
 
 namespace Tests
 {
     public class BattleFlowTest
     {
+        /*
         private BattleFlow battleFlow;
         private int counter;
 
@@ -52,6 +53,6 @@ namespace Tests
         {
             battleFlow = new BattleFlow();
             counter = 0;
-        }
+        }*/
     }
 }
