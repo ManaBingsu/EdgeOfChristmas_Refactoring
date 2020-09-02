@@ -7,12 +7,33 @@ namespace Battle
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
     {
-        public bool IsWinner { get; set; }
-
-        public int winCount;
-
+        #region Reference
         private Rigidbody2D body;
-        public int xDir { get; set; }
+
+        [SerializeField]
+        GameObject marker;
+        #endregion
+
+        #region Game system
+        private bool isMyPlayer;
+        public bool IsMyPlayer
+        {
+            get => isMyPlayer;
+            set
+            {
+                isMyPlayer = value;
+                marker.SetActive(isMyPlayer);
+            }
+        }
+        public bool IsWinner { get; set; }
+        public int WinCount
+        {
+            get;
+            set;
+        }
+        #endregion
+
+        public int XDir { get; set; }
 
         private bool isMove = false;
 
@@ -52,7 +73,7 @@ namespace Battle
 
         public void SetMoveVector(int xDir)
         {
-            this.xDir = xDir;
+            this.XDir = xDir;
 
             if (xDir == 0)
             {
@@ -66,13 +87,12 @@ namespace Battle
 
         public void Move()
         {
-            transform.position += Vector3.right * 2 * xDir * Time.deltaTime;
+            transform.position += Vector3.right * 2 * XDir * Time.deltaTime;
         }
 
         public void Jump()
         {
-            body.AddForce(new Vector3(0, 5, 0), ForceMode2D.Impulse);
+            body.AddForce(new Vector3(0, 10, 0), ForceMode2D.Impulse);
         }
     }
 }
-

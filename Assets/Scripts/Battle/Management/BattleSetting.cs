@@ -12,8 +12,8 @@ namespace Battle
 
         public void CountWin(SessionId winner)
         {
-            players[winner].winCount++;
-            if (players[winner].winCount >= totalWin)
+            players[winner].WinCount++;
+            if (players[winner].WinCount >= totalWin)
             {
                 FlowState = EFlowState.Result;
             }

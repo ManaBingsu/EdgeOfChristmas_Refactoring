@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860f1b6f8235edc489153bb69ee5466c, type: 3}
+  m_Name: Data_Item_2_Snowball
+  m_EditorClassIdentifier: 
+  index: 2
+  sprite: {fileID: 21300000, guid: eeef3c9cc033a4f40874dc626e5a7796, type: 3}
+  appearPercentage: 0.35

@@ -19,8 +19,6 @@ namespace Battle
 
         private void InputControl()
         {
-
-
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 InputMove(1);

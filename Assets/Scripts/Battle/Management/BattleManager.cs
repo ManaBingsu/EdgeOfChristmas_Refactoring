@@ -2,6 +2,7 @@
 using Protocol;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 
 namespace Battle
@@ -87,6 +88,7 @@ namespace Battle
                 if (BackEndMatchManager.GetInstance().IsMySessionId(sessionId))
                 {
                     myPlayerIndex = sessionId;
+                    players[sessionId].IsMyPlayer = true;
                     //players[sessionId].Initialize(true, myPlayerIndex, BackEndMatchManager.GetInstance().GetNickNameBySessionId(sessionId), statringPoints[index].w);
                 }
                 else
@@ -170,6 +172,10 @@ namespace Battle
                     PlayerNoMoveMessage noMoveMessage = DataParser.ReadJsonData<PlayerNoMoveMessage>(args.BinaryUserData);
                     //ProcessPlayerData(noMoveMessage);
                     break;
+                case Protocol.Type.SpawnItem:
+                    SpawnItemMessage spawnItemMessage = DataParser.ReadJsonData<SpawnItemMessage>(args.BinaryUserData);
+                    ProcessPlayerData(spawnItemMessage);
+                    break;
                 case Protocol.Type.GameSync:
                     GameSyncMessage syncMessage = DataParser.ReadJsonData<GameSyncMessage>(args.BinaryUserData);
                     ProcessSyncData(syncMessage);
@@ -214,7 +220,7 @@ namespace Battle
             }
             int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (players[data.playerSession].xDir != xDir)
+            if (players[data.playerSession].XDir != xDir)
             {
                 players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
                 players[data.playerSession].SetMoveVector(xDir);
@@ -239,6 +245,27 @@ namespace Battle
                 return;
             }
             players[data.playerSession].Jump();
+        }
+        private void ProcessPlayerData(SpawnItemMessage data)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            ItemManager.Instance.SpawnItem(data.itemIndex, data.xPos, data.speed, data.rotate);
+        }
+
+        public void ProcessSpawnEvent(SpawnItemMessage spawnItemMessage)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == false)
+            {
+                //호스트만 수행
+                return;
+            }
+            // Item 소환
+            ItemManager.Instance.SpawnItem(spawnItemMessage.itemIndex, spawnItemMessage.xPos, spawnItemMessage.speed, spawnItemMessage.rotate);
+            BackEndMatchManager.GetInstance().SendDataToInGame<SpawnItemMessage>(spawnItemMessage);
         }
 
         private void ProcessKeyEvent(SessionId index, KeyMessage keyMessage)
