@@ -10,6 +10,8 @@ namespace Battle
     {
         private SpriteRenderer spriteRenderer;
 
+        public ItemData itemInfo;
+
         private float speed;
 
         private void Awake()
@@ -22,8 +24,10 @@ namespace Battle
             Move();
         }
 
-        public void Initialize(ItemInfo itemInfo, float xPos, float speed, float rotate)
+        public void Initialize(ItemData itemInfo, float xPos, float speed, float rotate)
         {
+            this.itemInfo = itemInfo;
+
             spriteRenderer.sprite = itemInfo.sprite;
             transform.position = new Vector3(xPos, ItemManager.Instance.yPos, 0);
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotate));

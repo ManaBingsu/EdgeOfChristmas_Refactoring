@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using BackEnd.Tcp;
-using Server.System;
+using Server;
 using GameSystem;
 /*
 * 매치매니저 (매칭 관련 기능)
@@ -17,6 +17,11 @@ using GameSystem;
 
 public partial class BackEndMatchManager : MonoBehaviour
 {
+    enum MatchGameType
+    {
+        ClassicRandom = 0
+    }
+
     public MatchType nowMatchType { get; private set; } = MatchType.None;     // 현재 선택된 매치 타입
     public MatchModeType nowModeType { get; private set; } = MatchModeType.None; // 현재 선택된 매치 모드 타입
 

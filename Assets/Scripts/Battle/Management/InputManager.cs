@@ -7,10 +7,13 @@ namespace Battle
 {
     public class InputManager : MonoBehaviour
     {
+        private Player myPlayer;
+
         bool isMove = false;
         private void Start()
         {
             VirtualStick.Instance.xDirChangeEvent += InputMove;
+            myPlayer = BattleManager.Instance.players[BattleManager.Instance.myPlayerIndex];
         }
         private void Update()
         {
@@ -93,6 +96,23 @@ namespace Battle
 
             KeyMessage msg;
             msg = new KeyMessage(keyCode, moveVector);
+            if (BackEndMatchManager.GetInstance().IsHost())
+            {
+                BackEndMatchManager.GetInstance().AddMsgToLocalQueue(msg);
+            }
+            else
+            {
+                BackEndMatchManager.GetInstance().SendDataToInGame<KeyMessage>(msg);
+            }
+        }
+
+        private void InputUseItem()
+        {
+            int keyCode = 0;
+            keyCode |= KeyEventCode.USEITEM;
+
+            KeyMessage msg;
+            msg = new KeyMessage(keyCode, Vector3.zero);
             if (BackEndMatchManager.GetInstance().IsHost())
             {
                 BackEndMatchManager.GetInstance().AddMsgToLocalQueue(msg);

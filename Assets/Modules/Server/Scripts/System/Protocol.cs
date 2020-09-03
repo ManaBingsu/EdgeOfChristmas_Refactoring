@@ -95,11 +95,10 @@ namespace Protocol
     public class PlayerUseItemMessage : Message
     {
         public SessionId playerSession;
-        public int itemIndex;
-        public PlayerUseItemMessage(SessionId session, int itemIndex) : base(Type.PlayerUseItem)
+
+        public PlayerUseItemMessage(SessionId session) : base(Type.PlayerUseItem)
         {
             this.playerSession = session;
-            this.itemIndex = itemIndex;
         }
     }
 

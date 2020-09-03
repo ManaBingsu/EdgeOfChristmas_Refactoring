@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 3
   sprite: {fileID: 21300000, guid: d703665e8151ad445b9627997ae9584c, type: 3}
+  itemType: 1
   appearPercentage: 0.5
+  flyingSpeed: 3
+  power: 10
+  isRotate: 1
