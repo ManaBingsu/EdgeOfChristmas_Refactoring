@@ -27,7 +27,7 @@ namespace Battle
             this.itemInfo = itemInfo;
             transform.position = pos;
 
-            xDir = BattleManager.Instance.players[sessionId].XDir;
+            xDir = BattleManager.Instance.players[sessionId].GoalDirection;
             speed = itemInfo.flyingSpeed;
             isRotate = itemInfo.isRotate;
         }

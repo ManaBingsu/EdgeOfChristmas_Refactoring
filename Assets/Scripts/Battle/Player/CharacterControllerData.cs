@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Graphs;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Battle
 {
-    public class CharacterControllerData : MonoBehaviour
+    [CreateAssetMenu(fileName = "CharacterControllerData", menuName = "Battle/Character/CharacterControllerData")]
+    public class CharacterControllerData : ScriptableObject
     {
         public float maxMoveSpeed;
         public float acceleration;

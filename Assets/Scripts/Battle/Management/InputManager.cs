@@ -7,13 +7,13 @@ namespace Battle
 {
     public class InputManager : MonoBehaviour
     {
-        private Player myPlayer;
+       // private Player myPlayer;
 
         bool isMove = false;
         private void Start()
         {
             VirtualStick.Instance.xDirChangeEvent += InputMove;
-            myPlayer = BattleManager.Instance.players[BattleManager.Instance.myPlayerIndex];
+            //myPlayer = BattleManager.Instance.players[BattleManager.Instance.myPlayerIndex];
         }
         private void Update()
         {

@@ -31,7 +31,7 @@ namespace Battle
 
         private void Start()
         {
-            players = new Dictionary<SessionId, Player>();
+            //players = new Dictionary<SessionId, Player>();
             if (BackEndMatchManager.GetInstance() != null)
             {
                 var gamers = BackEndMatchManager.GetInstance().sessionIdList;
@@ -100,6 +100,7 @@ namespace Battle
                 index += 1;
             }
             Debug.Log("Num Of Current Player : " + size);
+            Debug.Log("Num of players : " + players.Count);
             /*
             // 스코어 보드 설정
             alivePlayer = size;
@@ -226,7 +227,7 @@ namespace Battle
             }
             int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (players[data.playerSession].XDir != xDir)
+            if (true/*players[data.playerSession].GoalDirection != xDir*/)
             {
                 players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
                 players[data.playerSession].SetMoveVector(xDir);

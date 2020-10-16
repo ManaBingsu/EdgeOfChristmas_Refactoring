@@ -48,18 +48,15 @@ namespace Battle
             }
         }
 
-        protected int goalDirection
-        {
-            get; set;
-        }
+        public int GoalDirection { get; set; }
 
-        protected int currentDirection;
+        protected int currentDirection = -1;
         public int CurrentDirection
         {
             get => currentDirection;
             set
             {
-
+                currentDirection = value;
             }
         }
 
@@ -69,7 +66,7 @@ namespace Battle
             get => moveSpeed;
             set
             {
-                
+                moveSpeed = value;
             }
         }
 
@@ -113,29 +110,38 @@ namespace Battle
 
         public void Move()
         {
-            int accelDirection = goalDirection * currentDirection;
+            int accelDirection = GoalDirection * CurrentDirection;
             if (accelDirection < 0)
             {
                 if (CurrentMoveSpeed > 0)
                     CurrentMoveSpeed -= data.acceleration;
                 else
-                    currentDirection = goalDirection;
+                    CurrentDirection = GoalDirection;
             }
             else
             {
                 CurrentMoveSpeed += data.acceleration;
-            }    
+            }
+            if (CurrentDirection != GoalDirection)
+            Debug.Log($"accel : {accelDirection}, Goal : {GoalDirection}, Currrent : {CurrentDirection}, Spd : {CurrentMoveSpeed}");
+        }
+
+        public void Jump()
+        {
+            if (!isGrounded)
+                return;
+
+            body.AddForce(new Vector3(0, 10, 0), ForceMode2D.Impulse);
         }
 
         public void Movement()
         {
-            transform.position += Vector3.right * CurrentMoveSpeed * currentDirection * Time.deltaTime;
+            transform.position += Vector3.right * CurrentMoveSpeed * CurrentDirection * Time.deltaTime;
         }
 
         public void NotMove()
         {
-            if (CurrentMoveSpeed > 0)
-                CurrentMoveSpeed -= data.acceleration * Time.deltaTime;
+            CurrentMoveSpeed -= data.acceleration;
         }
 
         protected virtual IEnumerator KnockBack(int xDir, float ccPower)

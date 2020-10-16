@@ -38,7 +38,6 @@ namespace Battle
         #endregion
 
         #region Public info
-        public int XDir { get; set; }
 
         private int itemIndex;
         public int ItemIndex
@@ -71,21 +70,11 @@ namespace Battle
         }
         #endregion
 
-        private bool isMove = false;
-
         public bool ableToMove = false;
 
         protected override void Awake()
         {
             base.Awake();
-        }
-
-        private void Update()
-        {
-            if (isMove)
-            {
-                Move();
-            }
         }
 
         protected override void OnTriggerEnter2D(Collider2D col)
@@ -107,9 +96,7 @@ namespace Battle
                 FallingItem item = col.gameObject.GetComponent<FallingItem>();
                 CollideWithFallingItem(item.itemInfo.index);
             }
-
         }
-
 
         public Vector3 GetPosition()
         {
@@ -134,7 +121,7 @@ namespace Battle
 
         public void SetMoveVector(int xDir)
         {
-            this.XDir = xDir;
+            this.GoalDirection = xDir;
 
             if (xDir == 0)
             {
@@ -146,18 +133,11 @@ namespace Battle
             }
         }
 
-        public void Move()
+        /*public void Move()
         {
             transform.position += Vector3.right * 2 * XDir * Time.deltaTime;
-        }
-
-        public void Jump()
-        {
-            if (!isGrounded)
-                return;
-
-            body.AddForce(new Vector3(0, 10, 0), ForceMode2D.Impulse);
-        }
+        }*/
+        
 
         public void UseItem()
         {
