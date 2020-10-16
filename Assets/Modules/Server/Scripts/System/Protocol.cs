@@ -73,12 +73,16 @@ namespace Protocol
         public float yPos;
 
         public int xDir;
-        public PlayerMoveMessage(SessionId session, Vector2 pos, int xDir) : base(Type.PlayerMove)
+
+        public float speed;
+
+        public PlayerMoveMessage(SessionId session, Vector2 pos, int xDir, float speed) : base(Type.PlayerMove)
         {
             this.playerSession = session;
             this.xPos = pos.x;
             this.yPos = pos.y;
             this.xDir = xDir;
+            this.speed = speed;
         }
     }
 

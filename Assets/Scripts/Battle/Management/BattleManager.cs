@@ -91,6 +91,7 @@ namespace Battle
                 {
                     myPlayerIndex = sessionId;
                     players[sessionId].IsMyPlayer = true;
+                    InputManager.Instance.myPlayer = players[sessionId];
                     //players[sessionId].Initialize(true, myPlayerIndex, BackEndMatchManager.GetInstance().GetNickNameBySessionId(sessionId), statringPoints[index].w);
                 }
                 else
@@ -227,10 +228,11 @@ namespace Battle
             }
             int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (true/*players[data.playerSession].GoalDirection != xDir*/)
+            if (players[data.playerSession].GoalDirection != xDir)
             {
                 players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
                 players[data.playerSession].SetMoveVector(xDir);
+                players[data.playerSession].CurrentMoveSpeed = data.speed;
             }
         }
 
@@ -344,8 +346,9 @@ namespace Battle
                 Vector3 moveVector = players[index].GetPosition();
                 players[index].SetPosition(moveVector.x, moveVector.y, 0);
                 players[index].SetMoveVector(xDir);
+                players[index].CurrentMoveSpeed = keyMessage.y;
 
-                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir, players[index].CurrentMoveSpeed);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
             if (isJump)
@@ -372,7 +375,7 @@ namespace Battle
             {
                 players[index].SetMoveVector(xDir);
 
-                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData, players[index].CurrentMoveSpeed);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
         }
