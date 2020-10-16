@@ -1,4 +1,5 @@
-﻿using Protocol;
+﻿using BackEnd.Tcp;
+using Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,17 @@ namespace Battle
             Candy
         }
 
+        public enum ActiveItem
+        {
+            Snowball,
+            Candy
+        }
+
         [Header("Setting")]
+
+        public int maxItemNum;
+
+        [Space(10)]
         [SerializeField]
         private float minSpawnTime;
         [SerializeField]
@@ -39,11 +50,13 @@ namespace Battle
         [SerializeField]
         private float maxXPos;
 
+        [Header("Item prefab")]
+        public List<GameObjectPool<FlyingItem>> itemPools;
+
         [Header("Reference")]
+        public List<ItemData> itemInfos;
         [SerializeField]
-        private List<ItemInfo> itemInfos;
-        [SerializeField]
-        public FallingItemPool pool;
+        public GameObjectPool<FallingItem> pool;
 
         private List<Tuple<float, float>> appearRanges;
         private Coroutine spawnCoroutine;
@@ -71,6 +84,7 @@ namespace Battle
 
             appearRanges = new List<Tuple<float, float>>();
 
+            // Set item percentage range
             for (int i = 0; i < itemInfos.Count; i++)
             {
                 float min = 0;
@@ -136,7 +150,6 @@ namespace Battle
             int randomItemIndex = GetRandomItemIndex();
             float randomXPos = Random.Range(minXPos, maxXPos);
             float randomItemSpeed = Random.Range(minFallingSpeed, maxFallingSpeed);
-
             float randomRotate = Random.Range(0f, 360f);
 
             SpawnItemMessage msg = new SpawnItemMessage(randomItemIndex, randomXPos, randomItemSpeed, randomRotate);
@@ -146,6 +159,11 @@ namespace Battle
         public void SpawnItem(int itemIndex, float itemXPos, float itemSpeed, float itemRotate)
         {
             pool.GetObject().Initialize(itemInfos[itemIndex], itemXPos, itemSpeed, itemRotate);
+        }
+
+        public void ThrowItem(SessionId sessionId, int itemIndex, Vector3 pos)
+        {
+            itemPools[itemIndex].GetObject().Initialize(sessionId, itemInfos[itemIndex], pos);
         }
     }
 }

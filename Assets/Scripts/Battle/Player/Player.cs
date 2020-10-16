@@ -1,15 +1,16 @@
-﻿using System.Collections;
+﻿using BackEnd.Tcp;
+using JetBrains.Annotations;
+using Protocol;
+using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 using UnityEngine;
 
 namespace Battle
 {
-    [RequireComponent(typeof(Rigidbody2D))]
-    public class Player : MonoBehaviour
+    public class Player : CharacterController2D
     {
         #region Reference
-        private Rigidbody2D body;
-
         [SerializeField]
         GameObject marker;
         #endregion
@@ -25,6 +26,9 @@ namespace Battle
                 marker.SetActive(isMyPlayer);
             }
         }
+
+        public SessionId sessionId;
+
         public bool IsWinner { get; set; }
         public int WinCount
         {
@@ -33,20 +37,64 @@ namespace Battle
         }
         #endregion
 
-        public int XDir { get; set; }
+        #region Public info
 
-        private bool isMove = false;
-
-        private void Awake()
+        private int itemIndex;
+        public int ItemIndex
         {
-            body = GetComponent<Rigidbody2D>();
+            get => itemIndex;
+            set
+            {
+                if (value == itemIndex)
+                {
+                    ItemNum++;
+                }
+                else
+                {
+                    itemIndex = value;
+                    ItemNum = 1;
+                }
+
+            }
+        }
+        private int itemNum;
+        public int ItemNum
+        {
+            get => itemNum;
+            set
+            {
+                if (value > ItemManager.Instance.maxItemNum)
+                    return;
+                itemNum = value;
+            }
+        }
+        #endregion
+
+        public bool ableToMove = false;
+
+        protected override void Awake()
+        {
+            base.Awake();
         }
 
-        private void Update()
+        protected override void OnTriggerEnter2D(Collider2D col)
         {
-            if (isMove)
+            base.OnTriggerEnter2D(col);
+
+            if (col.gameObject.CompareTag("FlyingItem"))
             {
-                Move();
+                FlyingItem item = col.gameObject.GetComponent<FlyingItem>();
+                if (item.OwnerId != sessionId)
+                {
+                    GetDamage(itemIndex);
+                }
+
+            }
+
+            if (col.gameObject.CompareTag("FallingItem"))
+            {
+                FallingItem item = col.gameObject.GetComponent<FallingItem>();
+                CollideWithFallingItem(item.itemInfo.index);
             }
         }
 
@@ -57,7 +105,7 @@ namespace Battle
 
         public int GetItemIndex()
         {
-            return 0;
+            return ItemIndex;
         }
 
         public void SetPosition(float x, float y, float z)
@@ -73,7 +121,7 @@ namespace Battle
 
         public void SetMoveVector(int xDir)
         {
-            this.XDir = xDir;
+            this.GoalDirection = xDir;
 
             if (xDir == 0)
             {
@@ -85,14 +133,72 @@ namespace Battle
             }
         }
 
-        public void Move()
+        /*public void Move()
         {
             transform.position += Vector3.right * 2 * XDir * Time.deltaTime;
+        }*/
+        
+
+        public void UseItem()
+        {
+            ItemManager.Instance.ThrowItem(sessionId, ItemIndex, transform.position);
         }
 
-        public void Jump()
+        public void CollideWithFallingItem(int itemIndex)
         {
-            body.AddForce(new Vector3(0, 10, 0), ForceMode2D.Impulse);
+            if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
+                return;
+
+            PlayerGetItemMessage msg;
+            msg = new PlayerGetItemMessage(sessionId, itemIndex);
+            if (BackEndMatchManager.GetInstance().IsHost())
+            {
+                BattleManager.Instance.ProcessGetItemEvent(msg);
+            }
+            else
+            {
+                BackEndMatchManager.GetInstance().SendDataToInGame<PlayerGetItemMessage>(msg);
+            }
+        }
+
+        public void GetItem(int itemIndex)
+        {
+            if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Consume)
+            {
+                GetConsumeItem(itemIndex);
+            }
+            else if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Active)
+            {
+                ItemIndex = itemIndex;
+            }
+        }
+
+        private void GetConsumeItem(int itemIndex)
+        {
+            switch(itemIndex)
+            {
+                case (int)ItemManager.Item.Gift:
+                    // 점수 얻기
+                    break;
+
+                case (int)ItemManager.Item.GoldenGift:
+                    break;
+            }
+        }
+
+        public void GetDamage(int itemIndex)
+        {
+            switch (itemIndex)
+            {
+                case (int)ItemManager.Item.Snowball:
+                    // 점수 얻기
+                    break;
+
+                case (int)ItemManager.Item.Candy:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

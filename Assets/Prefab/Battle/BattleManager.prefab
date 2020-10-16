@@ -90,54 +90,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 7524434306833333336, guid: 8423382ace15c8a4a9f5eb1a017d31aa,
     type: 3}
+  myPlayerIndex: 0
   totalRound: 0
   totalWin: 0
---- !u!1 &5448426739704765254
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4207972511299817210}
-  - component: {fileID: 7352955551997708337}
-  m_Layer: 0
-  m_Name: Pool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4207972511299817210
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5448426739704765254}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 9206879513599846261}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7352955551997708337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5448426739704765254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47e32f29878fdd04da1f848ee3214db2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initNum: 6
-  poolingObjectPrefab: {fileID: 1428276289555973314, guid: e679481e88154c644965a0a9aa92eb9b,
-    type: 3}
+  icePower: 0
 --- !u!1 &8603344243781806584
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,8 +121,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4207972511299817210}
+  m_Children: []
   m_Father: {fileID: 4963388859530879356}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -182,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4bf068780ffe5408493da2ccd01306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxItemNum: 0
   minSpawnTime: 0.5
   maxSpawnTime: 1
   minFallingSpeed: 2.25
@@ -190,8 +146,7 @@ MonoBehaviour:
   minXPos: -5
   maxXPos: 5
   itemInfos:
-  - {fileID: 11400000, guid: 9e1611ad65ba34e47af915d654420d96, type: 2}
-  - {fileID: 11400000, guid: 8253e3a038b402741b8ddc828443d9e0, type: 2}
-  - {fileID: 11400000, guid: f29702259e5890447a44f75fcdaf1c7a, type: 2}
-  - {fileID: 11400000, guid: c3fc83517e7a5d74eb90437f6763d3b3, type: 2}
-  pool: {fileID: 7352955551997708337}
+  - {fileID: 11400000, guid: 8d7ab50d5b40a984c98fbe7c652a75cc, type: 2}
+  - {fileID: 11400000, guid: abbb49f564704cf4486d8f7cba5d528c, type: 2}
+  - {fileID: 11400000, guid: 3fe5d90a9949f2b4e83ace4357c56e5a, type: 2}
+  - {fileID: 11400000, guid: a4e769d23ca6f5e49868c0a03867d343, type: 2}

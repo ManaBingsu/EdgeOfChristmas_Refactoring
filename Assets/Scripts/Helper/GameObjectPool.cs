@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FallingItemPool : MonoBehaviour
+public class GameObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
     [SerializeField]
     private int initNum = 6;
     [SerializeField]
     private GameObject poolingObjectPrefab;
-    public Queue<FallingItem> poolingObjectQueue = new Queue<FallingItem>();
+    public Queue<T> poolingObjectQueue = new Queue<T>();
 
     private void Awake()
     {
@@ -22,14 +22,14 @@ public class FallingItemPool : MonoBehaviour
             poolingObjectQueue.Enqueue(CreateNewObject());
         }
     }
-    private FallingItem CreateNewObject()
+    private T CreateNewObject()
     {
-        var newObj = Instantiate(poolingObjectPrefab).GetComponent<FallingItem>();
+        var newObj = Instantiate(poolingObjectPrefab).GetComponent<T>();
         newObj.gameObject.SetActive(false);
         newObj.transform.SetParent(transform);
         return newObj;
     }
-    public FallingItem GetObject()
+    public T GetObject()
     {
         if (poolingObjectQueue.Count > 0)
         {
@@ -46,7 +46,7 @@ public class FallingItemPool : MonoBehaviour
             return newObj;
         }
     }
-    public void ReturnObject(FallingItem obj)
+    public void ReturnObject(T obj)
     {
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(transform);

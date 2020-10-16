@@ -10,6 +10,8 @@ namespace Battle
         public int totalRound;
         public int totalWin;
 
+        public float icePower;
+
         public void CountWin(SessionId winner)
         {
             players[winner].WinCount++;

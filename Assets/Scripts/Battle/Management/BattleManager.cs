@@ -11,12 +11,12 @@ namespace Battle
     {
         public static BattleManager Instance;
 
-        private Dictionary<SessionId, Player> players;
+        public Dictionary<SessionId, Player> players;
 
         [SerializeField]
         private GameObject playerPrefab;
 
-        private SessionId myPlayerIndex = SessionId.None;
+        public SessionId myPlayerIndex = SessionId.None;
 
         private void Awake()
         {
@@ -31,7 +31,7 @@ namespace Battle
 
         private void Start()
         {
-            players = new Dictionary<SessionId, Player>();
+            //players = new Dictionary<SessionId, Player>();
             if (BackEndMatchManager.GetInstance() != null)
             {
                 var gamers = BackEndMatchManager.GetInstance().sessionIdList;
@@ -81,9 +81,11 @@ namespace Battle
             int index = 0;
             foreach (var sessionId in gamers)
             {
-                GameObject player = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                Player player = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Player>();
 
-                players.Add(sessionId, player.GetComponent<Player>());
+                players.Add(sessionId, player);
+
+                player.sessionId = sessionId;
 
                 if (BackEndMatchManager.GetInstance().IsMySessionId(sessionId))
                 {
@@ -98,6 +100,7 @@ namespace Battle
                 index += 1;
             }
             Debug.Log("Num Of Current Player : " + size);
+            Debug.Log("Num of players : " + players.Count);
             /*
             // 스코어 보드 설정
             alivePlayer = size;
@@ -162,7 +165,11 @@ namespace Battle
                     break;
                 case Protocol.Type.PlayerUseItem:
                     PlayerUseItemMessage useItemMessage = DataParser.ReadJsonData<PlayerUseItemMessage>(args.BinaryUserData);
-                    //ProcessPlayerData(damegedMessage);
+                    ProcessPlayerData(useItemMessage);
+                    break;
+                case Protocol.Type.PlayerGetItem:
+                    PlayerGetItemMessage playerGetItemMessage = DataParser.ReadJsonData<PlayerGetItemMessage>(args.BinaryUserData);
+                    ProcessGetItemEvent(playerGetItemMessage);
                     break;
                 case Protocol.Type.PlayerUseSkill:
                     PlayerUseSkillMessage useSkillMessage = DataParser.ReadJsonData<PlayerUseSkillMessage>(args.BinaryUserData);
@@ -220,11 +227,26 @@ namespace Battle
             }
             int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (players[data.playerSession].XDir != xDir)
+            if (true/*players[data.playerSession].GoalDirection != xDir*/)
             {
                 players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
                 players[data.playerSession].SetMoveVector(xDir);
             }
+        }
+
+        private void ProcessPlayerData(PlayerUseItemMessage data)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].UseItem();
+        }
+
+        private void ProcessPlayerData(PlayerGetItemMessage data)
+        {
+
         }
 
         private void ProcessPlayerData(PlayerJumpMessage data)
@@ -254,6 +276,16 @@ namespace Battle
                 return;
             }
             ItemManager.Instance.SpawnItem(data.itemIndex, data.xPos, data.speed, data.rotate);
+        }
+
+        public void ProcessGetItemEvent(PlayerGetItemMessage data)
+        {
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].GetItem(data.itemIndex);
         }
 
         public void ProcessSpawnEvent(SpawnItemMessage spawnItemMessage)
@@ -312,18 +344,22 @@ namespace Battle
                 Vector3 moveVector = players[index].GetPosition();
                 players[index].SetPosition(moveVector.x, moveVector.y, 0);
                 players[index].SetMoveVector(xDir);
+
                 PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
             if (isJump)
             {
                 players[index].Jump();
+
                 PlayerJumpMessage msg = new PlayerJumpMessage(index);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerJumpMessage>(msg);
             }
             if (isUseItem)
             {
-                PlayerUseItemMessage msg = new PlayerUseItemMessage(index, players[index].GetItemIndex());
+                players[index].UseItem();
+
+                PlayerUseItemMessage msg = new PlayerUseItemMessage(index);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerUseItemMessage>(msg);
             }
             if (isUseSkill)
@@ -335,6 +371,7 @@ namespace Battle
             if (isNoMove)
             {
                 players[index].SetMoveVector(xDir);
+
                 PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
