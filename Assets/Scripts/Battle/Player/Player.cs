@@ -94,7 +94,8 @@ namespace Battle
             if (col.gameObject.CompareTag("FallingItem"))
             {
                 FallingItem item = col.gameObject.GetComponent<FallingItem>();
-                CollideWithFallingItem(item.itemInfo.index);
+                CollideWithFallingItem(item.ItemData.index);
+                item.CollidedWithPlayer();
             }
         }
 
@@ -149,8 +150,8 @@ namespace Battle
             if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
                 return;
 
-            PlayerGetItemMessage msg;
-            msg = new PlayerGetItemMessage(sessionId, itemIndex);
+            PlayerGetItemMessage msg = new PlayerGetItemMessage(sessionId, itemIndex);
+
             if (BackEndMatchManager.GetInstance().IsHost())
             {
                 BattleManager.Instance.ProcessGetItemEvent(msg);
@@ -163,13 +164,15 @@ namespace Battle
 
         public void GetItem(int itemIndex)
         {
-            if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Consume)
+            if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Consume)
             {
                 GetConsumeItem(itemIndex);
+                Debug.Log($"Get Consume {itemIndex} item!");
             }
-            else if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Active)
+            else if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Active)
             {
                 ItemIndex = itemIndex;
+                Debug.Log($"Get {itemIndex} item!");
             }
         }
 

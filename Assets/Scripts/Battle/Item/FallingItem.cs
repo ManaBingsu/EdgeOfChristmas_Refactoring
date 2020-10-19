@@ -10,7 +10,7 @@ namespace Battle
     {
         private SpriteRenderer spriteRenderer;
 
-        public ItemData itemInfo;
+        public ItemData ItemData { get; set; }
 
         private float speed;
 
@@ -24,14 +24,14 @@ namespace Battle
             Move();
         }
 
-        public void Initialize(ItemData itemInfo, float xPos, float speed, float rotate)
+        public void Initialize(FallingItemInfo fallingItemInfo)
         {
-            this.itemInfo = itemInfo;
+            ItemData = ItemManager.Instance.itemDatas[fallingItemInfo.ItemIndex];
 
-            spriteRenderer.sprite = itemInfo.sprite;
-            transform.position = new Vector3(xPos, ItemManager.Instance.yPos, 0);
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotate));
-            this.speed = speed;
+            spriteRenderer.sprite = ItemData.sprite;
+            transform.position = new Vector3(fallingItemInfo.ItemXPos, ItemManager.Instance.yPos, 0);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, fallingItemInfo.ItemRotate));
+            speed = fallingItemInfo.ItemSpeed;
         }
 
         public void Move()
@@ -41,7 +41,12 @@ namespace Battle
 
         void OnEnable()
         {
-            StartCoroutine(test());
+            if (ItemManager.Instance != null && ItemManager.Instance.FallingItemInfo != null)
+            {
+                Initialize(ItemManager.Instance.FallingItemInfo);
+                StartCoroutine(test());
+            }
+
         }
 
         IEnumerator test()
@@ -52,7 +57,12 @@ namespace Battle
 
         private void ReturnToPool()
         {
-            ItemManager.Instance.pool.ReturnObject(this);
+            ItemManager.Instance.Pool.ReturnObject(this.gameObject);
+        }
+
+        public void CollidedWithPlayer()
+        {
+            ItemManager.Instance.Pool.ReturnObject(this.gameObject);
         }
     }
 }

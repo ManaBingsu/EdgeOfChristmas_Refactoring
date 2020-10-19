@@ -110,6 +110,7 @@ namespace Battle
 
         public void Move()
         {
+            /*
             int accelDirection = GoalDirection * CurrentDirection;
             if (accelDirection < 0)
             {
@@ -121,9 +122,8 @@ namespace Battle
             else
             {
                 CurrentMoveSpeed += data.acceleration;
-            }
-            if (CurrentDirection != GoalDirection)
-            Debug.Log($"accel : {accelDirection}, Goal : {GoalDirection}, Currrent : {CurrentDirection}, Spd : {CurrentMoveSpeed}");
+            }*/
+            CurrentMoveSpeed = data.maxMoveSpeed;
         }
 
         public void Jump()
@@ -136,12 +136,13 @@ namespace Battle
 
         public void Movement()
         {
-            transform.position += Vector3.right * CurrentMoveSpeed * CurrentDirection * Time.deltaTime;
+            transform.position += Vector3.right * CurrentMoveSpeed * GoalDirection * Time.deltaTime;
         }
 
         public void NotMove()
         {
-            CurrentMoveSpeed -= data.acceleration;
+            // CurrentMoveSpeed -= data.acceleration;
+            CurrentMoveSpeed = 0;
         }
 
         protected virtual IEnumerator KnockBack(int xDir, float ccPower)

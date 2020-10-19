@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 228ca5007fe8fb541a86a16ca25a4370, type: 3}
   m_Name: Data_Item_3_Candy
   m_EditorClassIdentifier: 
-  index: 0
+  index: 3
   sprite: {fileID: 21300000, guid: d8e671893bb4aa544bd25bfc8190ebb6, type: 3}
   itemType: 1
   appearPercentage: 0.5

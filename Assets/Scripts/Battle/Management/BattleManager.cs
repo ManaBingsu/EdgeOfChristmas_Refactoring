@@ -91,6 +91,7 @@ namespace Battle
                 {
                     myPlayerIndex = sessionId;
                     players[sessionId].IsMyPlayer = true;
+                    InputManager.Instance.myPlayer = players[sessionId];
                     //players[sessionId].Initialize(true, myPlayerIndex, BackEndMatchManager.GetInstance().GetNickNameBySessionId(sessionId), statringPoints[index].w);
                 }
                 else
@@ -167,10 +168,6 @@ namespace Battle
                     PlayerUseItemMessage useItemMessage = DataParser.ReadJsonData<PlayerUseItemMessage>(args.BinaryUserData);
                     ProcessPlayerData(useItemMessage);
                     break;
-                case Protocol.Type.PlayerGetItem:
-                    PlayerGetItemMessage playerGetItemMessage = DataParser.ReadJsonData<PlayerGetItemMessage>(args.BinaryUserData);
-                    ProcessGetItemEvent(playerGetItemMessage);
-                    break;
                 case Protocol.Type.PlayerUseSkill:
                     PlayerUseSkillMessage useSkillMessage = DataParser.ReadJsonData<PlayerUseSkillMessage>(args.BinaryUserData);
                     //ProcessPlayerData(damegedMessage);
@@ -182,6 +179,10 @@ namespace Battle
                 case Protocol.Type.SpawnItem:
                     SpawnItemMessage spawnItemMessage = DataParser.ReadJsonData<SpawnItemMessage>(args.BinaryUserData);
                     ProcessPlayerData(spawnItemMessage);
+                    break;
+                case Protocol.Type.PlayerGetItem:
+                    PlayerGetItemMessage playerGetItemMessage = DataParser.ReadJsonData<PlayerGetItemMessage>(args.BinaryUserData);
+                    ProcessPlayerData(playerGetItemMessage);
                     break;
                 case Protocol.Type.GameSync:
                     GameSyncMessage syncMessage = DataParser.ReadJsonData<GameSyncMessage>(args.BinaryUserData);
@@ -227,10 +228,11 @@ namespace Battle
             }
             int xDir = data.xDir;
             // moveVector가 같으면 방향 & 이동량 같으므로 적용 굳이 안함
-            if (true/*players[data.playerSession].GoalDirection != xDir*/)
+            if (players[data.playerSession].GoalDirection != xDir)
             {
                 players[data.playerSession].SetPosition(data.xPos, data.yPos, 0);
                 players[data.playerSession].SetMoveVector(xDir);
+                players[data.playerSession].CurrentMoveSpeed = data.speed;
             }
         }
 
@@ -246,7 +248,12 @@ namespace Battle
 
         private void ProcessPlayerData(PlayerGetItemMessage data)
         {
-
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].GetItem(data.itemIndex);
         }
 
         private void ProcessPlayerData(PlayerJumpMessage data)
@@ -278,14 +285,18 @@ namespace Battle
             ItemManager.Instance.SpawnItem(data.itemIndex, data.xPos, data.speed, data.rotate);
         }
 
-        public void ProcessGetItemEvent(PlayerGetItemMessage data)
+        // -------------End of player data----------------------
+
+        public void ProcessGetItemEvent(PlayerGetItemMessage playerGetItemMessage)
         {
-            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            if (BackEndMatchManager.GetInstance().IsHost() == false)
             {
                 //호스트면 리턴
                 return;
             }
-            players[data.playerSession].GetItem(data.itemIndex);
+            Debug.Log($"Process GetItem message with {playerGetItemMessage.playerSession}");
+            players[playerGetItemMessage.playerSession].GetItem(playerGetItemMessage.itemIndex);
+            BackEndMatchManager.GetInstance().SendDataToInGame<PlayerGetItemMessage>(playerGetItemMessage);
         }
 
         public void ProcessSpawnEvent(SpawnItemMessage spawnItemMessage)
@@ -344,8 +355,9 @@ namespace Battle
                 Vector3 moveVector = players[index].GetPosition();
                 players[index].SetPosition(moveVector.x, moveVector.y, 0);
                 players[index].SetMoveVector(xDir);
+                players[index].CurrentMoveSpeed = keyMessage.y;
 
-                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), xDir, players[index].CurrentMoveSpeed);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
             if (isJump)
@@ -372,7 +384,7 @@ namespace Battle
             {
                 players[index].SetMoveVector(xDir);
 
-                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData);
+                PlayerMoveMessage msg = new PlayerMoveMessage(index, players[index].GetPosition(), keyMessage.keyData, players[index].CurrentMoveSpeed);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerMoveMessage>(msg);
             }
         }

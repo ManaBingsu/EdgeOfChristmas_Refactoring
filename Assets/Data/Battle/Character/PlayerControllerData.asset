@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlayerControllerData
   m_EditorClassIdentifier: 
   maxMoveSpeed: 5
-  acceleration: 0.5
+  acceleration: 0.2
