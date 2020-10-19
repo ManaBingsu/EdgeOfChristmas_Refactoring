@@ -59,5 +59,10 @@ namespace Battle
         {
             ItemManager.Instance.Pool.ReturnObject(this.gameObject);
         }
+
+        public void CollidedWithPlayer()
+        {
+            ItemManager.Instance.Pool.ReturnObject(this.gameObject);
+        }
     }
 }

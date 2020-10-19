@@ -168,10 +168,6 @@ namespace Battle
                     PlayerUseItemMessage useItemMessage = DataParser.ReadJsonData<PlayerUseItemMessage>(args.BinaryUserData);
                     ProcessPlayerData(useItemMessage);
                     break;
-                case Protocol.Type.PlayerGetItem:
-                    PlayerGetItemMessage playerGetItemMessage = DataParser.ReadJsonData<PlayerGetItemMessage>(args.BinaryUserData);
-                    ProcessGetItemEvent(playerGetItemMessage);
-                    break;
                 case Protocol.Type.PlayerUseSkill:
                     PlayerUseSkillMessage useSkillMessage = DataParser.ReadJsonData<PlayerUseSkillMessage>(args.BinaryUserData);
                     //ProcessPlayerData(damegedMessage);
@@ -183,6 +179,10 @@ namespace Battle
                 case Protocol.Type.SpawnItem:
                     SpawnItemMessage spawnItemMessage = DataParser.ReadJsonData<SpawnItemMessage>(args.BinaryUserData);
                     ProcessPlayerData(spawnItemMessage);
+                    break;
+                case Protocol.Type.PlayerGetItem:
+                    PlayerGetItemMessage playerGetItemMessage = DataParser.ReadJsonData<PlayerGetItemMessage>(args.BinaryUserData);
+                    ProcessPlayerData(playerGetItemMessage);
                     break;
                 case Protocol.Type.GameSync:
                     GameSyncMessage syncMessage = DataParser.ReadJsonData<GameSyncMessage>(args.BinaryUserData);
@@ -248,7 +248,12 @@ namespace Battle
 
         private void ProcessPlayerData(PlayerGetItemMessage data)
         {
-
+            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            {
+                //호스트면 리턴
+                return;
+            }
+            players[data.playerSession].GetItem(data.itemIndex);
         }
 
         private void ProcessPlayerData(PlayerJumpMessage data)
@@ -280,14 +285,18 @@ namespace Battle
             ItemManager.Instance.SpawnItem(data.itemIndex, data.xPos, data.speed, data.rotate);
         }
 
-        public void ProcessGetItemEvent(PlayerGetItemMessage data)
+        // -------------End of player data----------------------
+
+        public void ProcessGetItemEvent(PlayerGetItemMessage playerGetItemMessage)
         {
-            if (BackEndMatchManager.GetInstance().IsHost() == true)
+            if (BackEndMatchManager.GetInstance().IsHost() == false)
             {
                 //호스트면 리턴
                 return;
             }
-            players[data.playerSession].GetItem(data.itemIndex);
+            Debug.Log($"Process GetItem message with {playerGetItemMessage.playerSession}");
+            players[playerGetItemMessage.playerSession].GetItem(playerGetItemMessage.itemIndex);
+            BackEndMatchManager.GetInstance().SendDataToInGame<PlayerGetItemMessage>(playerGetItemMessage);
         }
 
         public void ProcessSpawnEvent(SpawnItemMessage spawnItemMessage)

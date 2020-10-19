@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 228ca5007fe8fb541a86a16ca25a4370, type: 3}
   m_Name: Data_Item_1_GoldenGift
   m_EditorClassIdentifier: 
-  index: 0
+  index: 1
   sprite: {fileID: 21300000, guid: a01e23f3a51ed4743ab762f11568957a, type: 3}
   itemType: 0
   appearPercentage: 0.05
