@@ -50,13 +50,12 @@ namespace Battle
         [SerializeField]
         private float maxXPos;
 
-        [Header("Item prefab")]
-        public List<GameObjectPool<FlyingItem>> itemPools;
-
         [Header("Reference")]
-        public List<ItemData> itemInfos;
-        [SerializeField]
-        public GameObjectPool<FallingItem> pool;
+        public List<ItemData> itemDatas;
+
+        public GameObjectPool Pool { get; set; }
+
+        public FallingItemInfo FallingItemInfo { get; set; }
 
         private List<Tuple<float, float>> appearRanges;
         private Coroutine spawnCoroutine;
@@ -76,6 +75,9 @@ namespace Battle
 
         private void Initialize()
         {
+            Pool = GetComponentInChildren<GameObjectPool>();
+            FallingItemInfo = new FallingItemInfo();
+
             if (BackEndMatchManager.GetInstance().IsHost())
             {
                 BattleManager.Instance.StateEvents[(int)BattleManager.EFlowState.Progress] += BeginSpawning;
@@ -85,17 +87,17 @@ namespace Battle
             appearRanges = new List<Tuple<float, float>>();
 
             // Set item percentage range
-            for (int i = 0; i < itemInfos.Count; i++)
+            for (int i = 0; i < itemDatas.Count; i++)
             {
                 float min = 0;
                 float max = 0;
                 float sum = 0;
                 for (int j = 0; j < i; j++)
                 {
-                    sum += itemInfos[j].appearPercentage;
+                    sum += itemDatas[j].appearPercentage;
                 }
                 min = sum;
-                max = sum + itemInfos[i].appearPercentage;
+                max = sum + itemDatas[i].appearPercentage;
                 Tuple<float, float> tuple = new Tuple<float, float>(min, max);
                 appearRanges.Add(tuple);
             }
@@ -158,12 +160,42 @@ namespace Battle
 
         public void SpawnItem(int itemIndex, float itemXPos, float itemSpeed, float itemRotate)
         {
-            pool.GetObject().Initialize(itemInfos[itemIndex], itemXPos, itemSpeed, itemRotate);
+            FallingItemInfo.SetItemInfo(itemIndex, itemXPos, itemSpeed, itemRotate);
+            Pool.GetObject();
         }
 
         public void ThrowItem(SessionId sessionId, int itemIndex, Vector3 pos)
         {
-            itemPools[itemIndex].GetObject().Initialize(sessionId, itemInfos[itemIndex], pos);
+            //itemPools[itemIndex].GetObject().Initialize(sessionId, itemInfos[itemIndex], pos);
+        }
+    }
+
+    public class FallingItemInfo
+    {
+        public int ItemIndex { get; set; }
+        public float ItemXPos { get; set; }
+        public float ItemSpeed { get; set; }
+        public float ItemRotate { get; set; }
+
+        public FallingItemInfo()
+        {
+
+        }
+
+        public FallingItemInfo(int itemIndex, float itemXPos, float itemSpeed, float itemRotate)
+        {
+            ItemIndex = itemIndex;
+            ItemXPos = itemXPos;
+            ItemSpeed = itemSpeed;
+            ItemRotate = itemRotate;
+        }
+
+        public void SetItemInfo(int itemIndex, float itemXPos, float itemSpeed, float itemRotate)
+        {
+            ItemIndex = itemIndex;
+            ItemXPos = itemXPos;
+            ItemSpeed = itemSpeed;
+            ItemRotate = itemRotate;
         }
     }
 }

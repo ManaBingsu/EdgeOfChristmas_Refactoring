@@ -136,7 +136,6 @@ namespace Battle
 
         public void Movement()
         {
-            //transform.position += Vector3.right * CurrentMoveSpeed * CurrentDirection * Time.deltaTime;
             transform.position += Vector3.right * CurrentMoveSpeed * GoalDirection * Time.deltaTime;
         }
 

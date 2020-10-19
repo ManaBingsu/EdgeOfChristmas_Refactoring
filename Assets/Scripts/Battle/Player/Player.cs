@@ -94,7 +94,7 @@ namespace Battle
             if (col.gameObject.CompareTag("FallingItem"))
             {
                 FallingItem item = col.gameObject.GetComponent<FallingItem>();
-                CollideWithFallingItem(item.itemInfo.index);
+                CollideWithFallingItem(item.ItemData.index);
             }
         }
 
@@ -163,11 +163,11 @@ namespace Battle
 
         public void GetItem(int itemIndex)
         {
-            if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Consume)
+            if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Consume)
             {
                 GetConsumeItem(itemIndex);
             }
-            else if (ItemManager.Instance.itemInfos[itemIndex].itemType == ItemData.ItemType.Active)
+            else if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Active)
             {
                 ItemIndex = itemIndex;
             }
