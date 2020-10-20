@@ -4,12 +4,8 @@ using UnityEngine;
 
 namespace Battle
 {
-    public class Snowball : FlyingItem
+    public class Candy : FlyingItem
     {
-        private void OnTriggerEnter2D(Collider2D col)
-        {
-            Collided(col);
-        }
 
         protected override void Collided(Collider2D col)
         {
@@ -58,7 +54,7 @@ namespace Battle
 
         protected override void ReturnToPool()
         {
-            ItemManager.Instance.SnowballPool.ReturnObject(this.gameObject);
+            ItemManager.Instance.CandyPool.ReturnObject(this.gameObject);
         }
     }
 }

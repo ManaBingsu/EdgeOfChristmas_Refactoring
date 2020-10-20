@@ -28,7 +28,7 @@ namespace Battle
         {
             GameObject newObj = Instantiate(poolingObjectPrefab);
             newObj.gameObject.SetActive(false);
-            newObj.transform.SetParent(transform);
+            newObj.transform.SetParent(this.gameObject.transform);
             return newObj;
         }
         public GameObject GetObject()
@@ -51,7 +51,7 @@ namespace Battle
         public void ReturnObject(GameObject obj)
         {
             obj.gameObject.SetActive(false);
-            obj.transform.SetParent(transform);
+            obj.transform.SetParent(this.gameObject.transform);
             poolingObjectQueue.Enqueue(obj);
         }
     }

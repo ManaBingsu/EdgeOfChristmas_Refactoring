@@ -47,14 +47,13 @@ namespace Battle
             {
                 if (value == itemIndex)
                 {
-                    ItemNum++;
+                    ItemNum++;                  
                 }
                 else
                 {
                     itemIndex = value;
                     ItemNum = 1;
                 }
-
             }
         }
         private int itemNum;
@@ -88,7 +87,6 @@ namespace Battle
                 {
                     GetDamage(itemIndex);
                 }
-
             }
 
             if (col.gameObject.CompareTag("FallingItem"))
@@ -122,27 +120,20 @@ namespace Battle
 
         public void SetMoveVector(int xDir)
         {
-            this.GoalDirection = xDir;
-
             if (xDir == 0)
             {
                 isMove = false;
             }
             else
             {
+                this.GoalDirection = xDir;
                 isMove = true;
             }
         }
 
-        /*public void Move()
-        {
-            transform.position += Vector3.right * 2 * XDir * Time.deltaTime;
-        }*/
-        
-
         public void UseItem()
         {
-            ItemManager.Instance.ThrowItem(sessionId, ItemIndex, transform.position);
+            ItemManager.Instance.UseItem(sessionId, ItemIndex, transform.position);
         }
 
         public void CollideWithFallingItem(int itemIndex)
@@ -167,12 +158,10 @@ namespace Battle
             if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Consume)
             {
                 GetConsumeItem(itemIndex);
-                Debug.Log($"Get Consume {itemIndex} item!");
             }
             else if (ItemManager.Instance.itemDatas[itemIndex].itemType == ItemData.ItemType.Active)
             {
                 ItemIndex = itemIndex;
-                Debug.Log($"Get {itemIndex} item!");
             }
         }
 

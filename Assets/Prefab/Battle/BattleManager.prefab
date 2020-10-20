@@ -44,6 +44,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myPlayer: {fileID: 0}
+--- !u!1 &3338577802192366055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7639253478062531129}
+  - component: {fileID: 6003432287747867463}
+  m_Layer: 0
+  m_Name: SnowballPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7639253478062531129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338577802192366055}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1795164728729845010}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6003432287747867463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3338577802192366055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e32f29878fdd04da1f848ee3214db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initNum: 2
+  poolingObjectPrefab: {fileID: 7325637686105215954, guid: 96b51acbff6fc8744880950eccc1a000,
+    type: 3}
 --- !u!1 &4963388859530879357
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +141,38 @@ MonoBehaviour:
   totalRound: 0
   totalWin: 0
   icePower: 0
+--- !u!1 &7127014837986461243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1795164728729845010}
+  m_Layer: 0
+  m_Name: FlyingItemPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1795164728729845010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7127014837986461243}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7639253478062531129}
+  - {fileID: 5911800793750963906}
+  m_Father: {fileID: 9206879513599846261}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7156011009153759442
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +184,7 @@ GameObject:
   - component: {fileID: 8576429169065854796}
   - component: {fileID: 7713406769758657307}
   m_Layer: 0
-  m_Name: Pool
+  m_Name: FallingItemPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,6 +248,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8576429169065854796}
+  - {fileID: 1795164728729845010}
   m_Father: {fileID: 4963388859530879356}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -185,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4bf068780ffe5408493da2ccd01306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxItemNum: 0
+  maxItemNum: 5
   minSpawnTime: 0.5
   maxSpawnTime: 1
   minFallingSpeed: 2.25
@@ -198,4 +277,52 @@ MonoBehaviour:
   - {fileID: 11400000, guid: abbb49f564704cf4486d8f7cba5d528c, type: 2}
   - {fileID: 11400000, guid: 3fe5d90a9949f2b4e83ace4357c56e5a, type: 2}
   - {fileID: 11400000, guid: a4e769d23ca6f5e49868c0a03867d343, type: 2}
-  pool: {fileID: 0}
+  FallingItemPool: {fileID: 7713406769758657307}
+  SnowballPool: {fileID: 6003432287747867463}
+  CandyPool: {fileID: 5326425402875913318}
+--- !u!1 &8842995203284717645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5911800793750963906}
+  - component: {fileID: 5326425402875913318}
+  m_Layer: 0
+  m_Name: CandyPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5911800793750963906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8842995203284717645}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1795164728729845010}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5326425402875913318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8842995203284717645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e32f29878fdd04da1f848ee3214db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initNum: 2
+  poolingObjectPrefab: {fileID: 5332378286470746291, guid: a5c18609a030a664a8beb29255a5d23a,
+    type: 3}

@@ -35,7 +35,8 @@ namespace Protocol
         public const int NONE = 0;
         public const int MOVE = 1;      // 이동 메시지
         public const int JUMP = 2;      // 점프 메시지
-        public const int USEITEM = 3;    // 아이템 사용 메시지
+
+        public const int USEITEM = (int)Type.PlayerUseItem;    // 아이템 사용 메시지
         public const int USESKILL = 4;      // 스킬 사용 메시지
         public const int NO_MOVE = 5;   // 이동 멈춤 메시지
     }

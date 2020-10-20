@@ -50,15 +50,29 @@ namespace Battle
         [SerializeField]
         private float maxXPos;
 
-        [Header("Reference")]
+        [Header("Item data")]
         public List<ItemData> itemDatas;
+        // GameObjectPool
 
-        public GameObjectPool Pool { get; set; }
+        [Header("Pool")]
+        public GameObjectPool FallingItemPool;
+        public GameObjectPool SnowballPool;
+        public GameObjectPool CandyPool;
 
+        #region Public value
+
+        // ItemInfo
         public FallingItemInfo FallingItemInfo { get; set; }
+
+        public FlyingItemInfo FlyingItemInfo { get; set; }
+        #endregion
+
+        #region Inner value
 
         private List<Tuple<float, float>> appearRanges;
         private Coroutine spawnCoroutine;
+
+        #endregion
 
         private void Awake()
         {
@@ -75,8 +89,9 @@ namespace Battle
 
         private void Initialize()
         {
-            Pool = GetComponentInChildren<GameObjectPool>();
+            FallingItemPool = GetComponentInChildren<GameObjectPool>();
             FallingItemInfo = new FallingItemInfo();
+            FlyingItemInfo = new FlyingItemInfo();
 
             if (BackEndMatchManager.GetInstance().IsHost())
             {
@@ -161,12 +176,21 @@ namespace Battle
         public void SpawnItem(int itemIndex, float itemXPos, float itemSpeed, float itemRotate)
         {
             FallingItemInfo.SetItemInfo(itemIndex, itemXPos, itemSpeed, itemRotate);
-            Pool.GetObject();
+            FallingItemPool.GetObject();
         }
 
-        public void ThrowItem(SessionId sessionId, int itemIndex, Vector3 pos)
+        public void UseItem(SessionId sessionId, int itemIndex, Vector3 pos)
         {
-            //itemPools[itemIndex].GetObject().Initialize(sessionId, itemInfos[itemIndex], pos);
+            FlyingItemInfo.SetItemInfo(sessionId, itemDatas[itemIndex], pos);
+            switch((Item)itemIndex)
+            {
+                case Item.Snowball:
+                    SnowballPool.GetObject();
+                    break;
+                case Item.Candy:
+                    CandyPool.GetObject();
+                    break;
+            }
         }
     }
 
@@ -196,6 +220,25 @@ namespace Battle
             ItemXPos = itemXPos;
             ItemSpeed = itemSpeed;
             ItemRotate = itemRotate;
+        }
+    }
+
+    public class FlyingItemInfo
+    {
+        public SessionId SessionId { get; set; }
+        public ItemData ItemData { get; set; }
+        public Vector3 Pos { get; set; } 
+
+        public FlyingItemInfo()
+        {
+
+        }
+
+        public void SetItemInfo(SessionId sessionId, ItemData itemData, Vector3 pos)
+        {
+            SessionId = sessionId;
+            ItemData = itemData;
+            Pos = pos;
         }
     }
 }

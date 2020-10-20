@@ -48,17 +48,21 @@ namespace Battle
             }
         }
 
-        public int GoalDirection { get; set; }
-
-        protected int currentDirection = -1;
-        public int CurrentDirection
+        private int goalDirection;
+        public int GoalDirection
         {
-            get => currentDirection;
+            get => goalDirection;
             set
             {
-                currentDirection = value;
+                goalDirection = value;
+                if (goalDirection != 0)
+                {
+                    LookDiretion = goalDirection;
+                }
             }
         }
+
+        public int LookDiretion { get; set; }
 
         protected float moveSpeed;
         public float MoveSpeed
@@ -83,6 +87,8 @@ namespace Battle
         protected virtual void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            GoalDirection = 0;
+            LookDiretion = 1;
         }
 
         protected virtual void Update()
@@ -110,19 +116,6 @@ namespace Battle
 
         public void Move()
         {
-            /*
-            int accelDirection = GoalDirection * CurrentDirection;
-            if (accelDirection < 0)
-            {
-                if (CurrentMoveSpeed > 0)
-                    CurrentMoveSpeed -= data.acceleration;
-                else
-                    CurrentDirection = GoalDirection;
-            }
-            else
-            {
-                CurrentMoveSpeed += data.acceleration;
-            }*/
             CurrentMoveSpeed = data.maxMoveSpeed;
         }
 
@@ -141,8 +134,7 @@ namespace Battle
 
         public void NotMove()
         {
-            // CurrentMoveSpeed -= data.acceleration;
-            CurrentMoveSpeed = 0;
+            GoalDirection = 0;
         }
 
         protected virtual IEnumerator KnockBack(int xDir, float ccPower)

@@ -264,6 +264,7 @@ namespace Battle
                 return;
             }
             players[data.playerSession].Jump();
+            Debug.Log("JUmp in ProcessPalyerData");
         }
 
         private void ProcessPlayerData(PlayerNoMoveMessage data)
@@ -273,7 +274,6 @@ namespace Battle
                 //호스트면 리턴
                 return;
             }
-            players[data.playerSession].Jump();
         }
         private void ProcessPlayerData(SpawnItemMessage data)
         {
@@ -294,7 +294,6 @@ namespace Battle
                 //호스트면 리턴
                 return;
             }
-            Debug.Log($"Process GetItem message with {playerGetItemMessage.playerSession}");
             players[playerGetItemMessage.playerSession].GetItem(playerGetItemMessage.itemIndex);
             BackEndMatchManager.GetInstance().SendDataToInGame<PlayerGetItemMessage>(playerGetItemMessage);
         }
@@ -349,7 +348,10 @@ namespace Battle
             {
                 isNoMove = true;
             }
-            
+
+
+            Debug.Log($"keyData {keyData} isuse {isUseItem}, isJump {isJump}");
+
             if (isMove)
             {
                 Vector3 moveVector = players[index].GetPosition();
@@ -363,7 +365,6 @@ namespace Battle
             if (isJump)
             {
                 players[index].Jump();
-
                 PlayerJumpMessage msg = new PlayerJumpMessage(index);
                 BackEndMatchManager.GetInstance().SendDataToInGame<PlayerJumpMessage>(msg);
             }

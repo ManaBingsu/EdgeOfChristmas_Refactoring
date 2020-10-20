@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace Battle
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public abstract class FlyingItem : MonoBehaviour
     {
-        protected ItemData itemInfo;
+        protected ItemData itemData;
 
         public SessionId OwnerId { get; set; }
 
@@ -19,23 +20,17 @@ namespace Battle
 
         protected bool isRotate;
 
-        public void Initialize(SessionId sessionId, ItemData itemInfo, Vector3 pos)
+        public void Initialize(FlyingItemInfo flyingItemInfo)
         {
             IsFlying = true;
 
-            OwnerId = sessionId;
-            this.itemInfo = itemInfo;
-            transform.position = pos;
+            OwnerId = flyingItemInfo.SessionId;
+            this.itemData = flyingItemInfo.ItemData;
+            transform.position = flyingItemInfo.Pos;
 
-            xDir = BattleManager.Instance.players[sessionId].GoalDirection;
-            speed = itemInfo.flyingSpeed;
-            isRotate = itemInfo.isRotate;
-        }
-
-        protected void OnTriggerEnter2D(Collider2D col)
-        {
-            IsFlying = false;
-            Collided(col);
+            xDir = BattleManager.Instance.players[OwnerId].LookDiretion;
+            speed = itemData.flyingSpeed;
+            isRotate = itemData.isRotate;
         }
 
         protected abstract void Collided(Collider2D col);
@@ -44,7 +39,20 @@ namespace Battle
 
         protected virtual void Move()
         {
-            
+            transform.position += new Vector3(xDir * speed * Time.deltaTime, 0);
+        }
+
+        protected IEnumerator Disappear()
+        {
+            yield return new WaitForSeconds(3f);
+            ReturnToPool();
+        }
+
+        protected abstract void ReturnToPool();
+
+        public void CollidedWithPlayer()
+        {
+            ItemManager.Instance.FallingItemPool.ReturnObject(this.gameObject);
         }
     }
 }

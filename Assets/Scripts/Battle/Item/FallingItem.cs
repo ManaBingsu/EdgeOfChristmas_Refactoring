@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Battle
 {
     [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(BoxCollider2D))]
     public class FallingItem : MonoBehaviour
     {
         private SpriteRenderer spriteRenderer;
@@ -44,12 +45,12 @@ namespace Battle
             if (ItemManager.Instance != null && ItemManager.Instance.FallingItemInfo != null)
             {
                 Initialize(ItemManager.Instance.FallingItemInfo);
-                StartCoroutine(test());
+                StartCoroutine(Disappear());
             }
 
         }
 
-        IEnumerator test()
+        IEnumerator Disappear()
         {
             yield return new WaitForSeconds(3f);
             ReturnToPool();
@@ -57,12 +58,12 @@ namespace Battle
 
         private void ReturnToPool()
         {
-            ItemManager.Instance.Pool.ReturnObject(this.gameObject);
+            ItemManager.Instance.FallingItemPool.ReturnObject(this.gameObject);
         }
 
         public void CollidedWithPlayer()
         {
-            ItemManager.Instance.Pool.ReturnObject(this.gameObject);
+            ItemManager.Instance.FallingItemPool.ReturnObject(this.gameObject);
         }
     }
 }

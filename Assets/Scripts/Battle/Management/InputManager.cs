@@ -41,12 +41,7 @@ namespace Battle
             {
                 InputMove(-1);
             }
-
-            if (Input.GetKeyUp(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow))
-            {
-                InputStop();
-            }
-            else if (Input.GetKeyUp(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+            else if ((Input.GetKeyUp(KeyCode.RightArrow) && !Input.GetKey(KeyCode.LeftArrow)) || (Input.GetKeyUp(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow)))
             {
                 InputStop();
             }
@@ -55,12 +50,22 @@ namespace Battle
             {
                 InputJump();
             }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                InputUseItem();
+            }
         }
 
         private void InputMove(int xDir)
         {
             if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
                 return;
+
+            if (xDir == myPlayer.GoalDirection)
+            {
+                return;
+            }
 
             int keyCode = 0;
             keyCode |= KeyEventCode.MOVE;
@@ -83,6 +88,11 @@ namespace Battle
             if (BattleManager.Instance.FlowState != BattleManager.EFlowState.Progress)
                 return;
 
+            if (myPlayer.GoalDirection == 0)
+            {
+                return;
+            }
+
             int keyCode = 0;
             keyCode |= KeyEventCode.MOVE;
             Vector3 moveVector = new Vector3(0, 0, 0);
@@ -103,10 +113,9 @@ namespace Battle
         {
             int keyCode = 0;
             keyCode |= KeyEventCode.JUMP;
-            Vector3 moveVector = new Vector3(0, 0, 0);
 
             KeyMessage msg;
-            msg = new KeyMessage(keyCode, moveVector);
+            msg = new KeyMessage(keyCode, Vector3.zero);
             if (BackEndMatchManager.GetInstance().IsHost())
             {
                 BackEndMatchManager.GetInstance().AddMsgToLocalQueue(msg);
