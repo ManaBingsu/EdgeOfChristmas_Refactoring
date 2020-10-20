@@ -85,7 +85,7 @@ namespace Battle
                 FlyingItem item = col.gameObject.GetComponent<FlyingItem>();
                 if (item.OwnerId != sessionId)
                 {
-                    GetDamage(itemIndex);
+                    GetDamage(item);
                 }
             }
 
@@ -178,16 +178,19 @@ namespace Battle
             }
         }
 
-        public void GetDamage(int itemIndex)
+        public void GetDamage(FlyingItem item)
         {
-            switch (itemIndex)
+            Debug.Log("Get damage : " + item.itemData.index + " : " + (int)ItemManager.Item.Candy);
+            switch (item.itemData.index)
             {
                 case (int)ItemManager.Item.Snowball:
-                    // 점수 얻기
+                    
                     break;
 
                 case (int)ItemManager.Item.Candy:
+                    StartCoroutine(KnockBack(item.xDir, item.itemData.power));
                     break;
+
                 default:
                     break;
             }

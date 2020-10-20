@@ -349,9 +349,6 @@ namespace Battle
                 isNoMove = true;
             }
 
-
-            Debug.Log($"keyData {keyData} isuse {isUseItem}, isJump {isJump}");
-
             if (isMove)
             {
                 Vector3 moveVector = players[index].GetPosition();

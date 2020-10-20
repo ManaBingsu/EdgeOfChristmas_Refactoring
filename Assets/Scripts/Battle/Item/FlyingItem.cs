@@ -8,13 +8,13 @@ namespace Battle
     [RequireComponent(typeof(SpriteRenderer))]
     public abstract class FlyingItem : MonoBehaviour
     {
-        protected ItemData itemData;
+        public ItemData itemData;
 
         public SessionId OwnerId { get; set; }
 
         public bool IsFlying { get; set; }
 
-        protected int xDir;
+        public int xDir;
 
         protected float speed;
 

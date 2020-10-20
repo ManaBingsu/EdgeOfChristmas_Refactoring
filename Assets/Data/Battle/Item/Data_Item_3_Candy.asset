@@ -17,5 +17,5 @@ MonoBehaviour:
   itemType: 1
   appearPercentage: 0.5
   flyingSpeed: 2
-  power: 0
+  power: 10
   isRotate: 0

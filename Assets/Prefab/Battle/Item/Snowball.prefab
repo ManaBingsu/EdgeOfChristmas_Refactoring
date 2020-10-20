@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7325637686105215952}
   m_Layer: 0
   m_Name: Snowball
-  m_TagString: Untagged
+  m_TagString: FlyingItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,6 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 600bbfbdee6498d459f3949628da78fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: 3fe5d90a9949f2b4e83ace4357c56e5a, type: 2}
+  xDir: 0
 --- !u!61 &7325637686105215952
 BoxCollider2D:
   m_ObjectHideFlags: 0

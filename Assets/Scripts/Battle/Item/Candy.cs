@@ -6,10 +6,13 @@ namespace Battle
 {
     public class Candy : FlyingItem
     {
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            Collided(col);
+        }
 
         protected override void Collided(Collider2D col)
-        {
-            /*
+        {       
             if (col.CompareTag("Player"))
             {
                 if (col.GetComponent<Player>().sessionId != OwnerId)
@@ -25,7 +28,7 @@ namespace Battle
                     Die();
                 }
             }
-            */
+            
         }
 
         private void Update()
@@ -44,7 +47,7 @@ namespace Battle
 
         protected override void Die()
         {
-            throw new System.NotImplementedException();
+            ReturnToPool();
         }
 
         protected override void Move()
