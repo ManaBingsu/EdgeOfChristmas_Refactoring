@@ -1,5 +1,6 @@
 ﻿using BackEnd.Tcp;
 using Protocol;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,13 @@ namespace Battle
 
         private Stack<SessionId> gameRecord;
 
+        public Action SetPlayerInfoAction;
+
         private void RegistEvent()
         {
             StateEvents[(int)EFlowState.Start] += OnGameStart;
             //StateEvents[(int)BattleManager.EFlowState.Progress] += OnProgressUIEvent;
+            SetPlayerInfoAction = new Action(delegate { });
         }
         #region Start event
         public void OnGameStart()

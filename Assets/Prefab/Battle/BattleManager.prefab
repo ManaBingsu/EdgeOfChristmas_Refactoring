@@ -138,9 +138,9 @@ MonoBehaviour:
   playerPrefab: {fileID: 7524434306833333336, guid: 8423382ace15c8a4a9f5eb1a017d31aa,
     type: 3}
   myPlayerIndex: 0
-  totalRound: 0
-  totalWin: 0
-  icePower: 0
+  TotalRound: 5
+  TotalWin: 3
+  RoundWinScore: 5
 --- !u!1 &7127014837986461243
 GameObject:
   m_ObjectHideFlags: 0

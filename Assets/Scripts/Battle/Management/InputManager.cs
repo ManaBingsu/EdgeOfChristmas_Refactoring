@@ -19,13 +19,21 @@ namespace Battle
                 Instance = this;
             else
                 DestroyImmediate(this.gameObject);
+
+            BattleManager.Instance.SetPlayerInfoAction += Initialize;
         }
 
         private void Start()
         {
             VirtualStick.Instance.xDirChangeEvent += InputMove;
+
+        }
+
+        private void Initialize()
+        {
             myPlayer = BattleManager.Instance.players[BattleManager.Instance.myPlayerIndex];
         }
+
         private void Update()
         {
             InputControl();

@@ -22,7 +22,8 @@ namespace Battle
 
         [Header("Flying Setting")]
         public float flyingSpeed;
-        public float power;
+        public float ccTime;
+        public float ccPower;
         public bool isRotate;
     }
 }

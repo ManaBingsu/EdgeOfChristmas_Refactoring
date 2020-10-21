@@ -11,6 +11,8 @@ namespace Battle
     public class Player : CharacterController2D
     {
         #region Reference
+        public PlayerData playerData;
+
         [SerializeField]
         GameObject marker;
         #endregion
@@ -170,17 +172,17 @@ namespace Battle
             switch(itemIndex)
             {
                 case (int)ItemManager.Item.Gift:
-                    // 점수 얻기
+                    BattleManager.Instance.AddScore(sessionId, 1);
                     break;
 
                 case (int)ItemManager.Item.GoldenGift:
+                    BattleManager.Instance.AddScore(sessionId, 2);
                     break;
             }
         }
 
         public void GetDamage(FlyingItem item)
         {
-            Debug.Log("Get damage : " + item.itemData.index + " : " + (int)ItemManager.Item.Candy);
             switch (item.itemData.index)
             {
                 case (int)ItemManager.Item.Snowball:
@@ -188,7 +190,7 @@ namespace Battle
                     break;
 
                 case (int)ItemManager.Item.Candy:
-                    StartCoroutine(KnockBack(item.xDir, item.itemData.power));
+                    StartCoroutine(KnockBack(item.xDir, item.itemData.ccTime, item.itemData.ccPower));
                     break;
 
                 default:

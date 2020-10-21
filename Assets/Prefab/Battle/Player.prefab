@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 990434179129626916}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -343,6 +343,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  playerData: {fileID: 0}
   marker: {fileID: 6771104875602767541}
   sessionId: 0
   ableToMove: 0

@@ -1,5 +1,6 @@
 ﻿using BackEnd.Tcp;
 using Protocol;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -12,6 +13,8 @@ namespace Battle
         public static BattleManager Instance;
 
         public Dictionary<SessionId, Player> players;
+
+
 
         [SerializeField]
         private GameObject playerPrefab;
@@ -31,7 +34,6 @@ namespace Battle
 
         private void Start()
         {
-            //players = new Dictionary<SessionId, Player>();
             if (BackEndMatchManager.GetInstance() != null)
             {
                 var gamers = BackEndMatchManager.GetInstance().sessionIdList;
@@ -39,7 +41,7 @@ namespace Battle
                 gameRecord = new Stack<SessionId>();
                 SetPlayerInfo();
             }
-
+            InitializeScore();
             StartCoroutine(StartTimer());
         }
 
@@ -69,11 +71,6 @@ namespace Battle
                 Debug.Log("No Player Exist!");
                 return;
             }
-            /*if (size > MAXPLAYER)
-            {
-                Debug.Log("Player Pool Exceed!");
-                return;
-            }*/
 
             players = new Dictionary<SessionId, Player>();
             BackEndMatchManager.GetInstance().SetPlayerSessionList(gamers);
@@ -100,8 +97,7 @@ namespace Battle
                 }
                 index += 1;
             }
-            Debug.Log("Num Of Current Player : " + size);
-            Debug.Log("Num of players : " + players.Count);
+            SetPlayerInfoAction?.Invoke();
             /*
             // 스코어 보드 설정
             alivePlayer = size;
@@ -264,7 +260,6 @@ namespace Battle
                 return;
             }
             players[data.playerSession].Jump();
-            Debug.Log("JUmp in ProcessPalyerData");
         }
 
         private void ProcessPlayerData(PlayerNoMoveMessage data)

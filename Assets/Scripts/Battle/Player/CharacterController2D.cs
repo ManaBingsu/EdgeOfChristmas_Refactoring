@@ -29,6 +29,9 @@ namespace Battle
 
         protected bool isMove;
 
+        // 행동 제어
+        protected bool isLock;
+
         protected float currentMoveSpeed;
 
         public float CurrentMoveSpeed
@@ -93,7 +96,7 @@ namespace Battle
 
         protected virtual void Update()
         {
-            if (isMove)
+            if (!isKnockBack && isMove)
             {
                 Move();
             }
@@ -137,14 +140,13 @@ namespace Battle
             GoalDirection = 0;
         }
 
-        protected virtual IEnumerator KnockBack(int xDir, float ccPower)
+        protected virtual IEnumerator KnockBack(int xDir, float ccTime, float ccPower)
         {
             isKnockBack = true;
 
             body.velocity = new Vector2(0f, body.velocity.y);
             body.AddForce((Vector2.right * xDir + Vector2.up).normalized * ccPower, ForceMode2D.Impulse);
             float time = 0f;
-            float ccTime = ccPower / 20;
             while (time < ccTime)
             {
                 time += Time.deltaTime;
@@ -152,6 +154,23 @@ namespace Battle
             }
             isKnockBack = false;
             yield return null;
+        }
+
+        protected virtual IEnumerator Stun(float ccTime)
+        {
+            // 분노모드 취소
+            //playerData.Rage -= 999;
+            //efcAnimator.gameObject.SetActive(true);
+
+            float time = 0f;
+            while (time < ccTime)
+            {
+                time += Time.deltaTime;
+
+                yield return null;
+            }
+            //efcAnimator.SetTrigger("TrgEnd");
+            //stunCoroutine = null;
         }
     }
 }
